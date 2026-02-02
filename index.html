@@ -68,8 +68,8 @@
       border-radius: 50%;
       display: inline-block;
       margin: 1px;
-      border: 2px solid white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      border: 1.5px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     
     .color-picker-btn {
@@ -78,18 +78,17 @@
       border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s;
-      border: 3px solid transparent;
+      border: 2px solid transparent;
     }
     
     .color-picker-btn:hover {
-      transform: scale(1.15);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transform: scale(1.1);
     }
     
     .color-picker-btn.selected {
       border-color: #ec4899;
       transform: scale(1.1);
-      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.3);
+      box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
     }
     
     .gradient-bg {
@@ -97,7 +96,7 @@
     }
     
     .glass-card {
-      background: rgba(255, 255, 255, 0.90);
+      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.5);
     }
@@ -108,7 +107,6 @@
     }
     
     .btn-primary:hover {
-      background: linear-gradient(135deg, #db2777 0%, #be185d 100%);
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(236, 72, 153, 0.4);
     }
@@ -116,31 +114,26 @@
     .input-field {
       transition: all 0.3s;
       border: 2px solid #f9a8d4;
+      font-size: 14px;
     }
     
     .input-field:focus {
       border-color: #ec4899;
-      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15);
+      box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.15);
       outline: none;
     }
     
     .table-row {
-      transition: all 0.3s;
-    }
-    
-    .table-row:hover {
-      background: rgba(252, 231, 243, 0.5);
-      transform: scale(1.005);
+      transition: all 0.2s;
     }
     
     .checkbox-cute {
       appearance: none;
-      width: 22px;
-      height: 22px;
-      border: 3px solid #f472b6;
-      border-radius: 6px;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #f472b6;
+      border-radius: 4px;
       cursor: pointer;
-      transition: all 0.3s;
       position: relative;
     }
     
@@ -160,11 +153,6 @@
       font-size: 12px;
     }
     
-    .warning-toast {
-      background: linear-gradient(135deg, #fef3c7, #fde68a);
-      border-left: 4px solid #f59e0b;
-    }
-    
     .petal {
       position: absolute;
       width: 15px;
@@ -176,8 +164,8 @@
     }
     
     .scrollbar-pink::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
     }
     
     .scrollbar-pink::-webkit-scrollbar-track {
@@ -193,146 +181,130 @@
   <style>@view-transition { navigation: auto; }</style>
  </head>
  <body class="h-full gradient-bg scrollbar-pink overflow-auto">
-  <div id="app" class="min-h-full w-full p-2 md:p-6"><div class="fixed inset-0 overflow-hidden pointer-events-none" id="petals-container"></div>
-  
-    <header class="text-center mb-4 bounce-in relative">
-     <div class="inline-block">
-      <h1 id="shop-title" class="text-2xl md:text-5xl font-bold text-pink-600 float">🌸 AAFLOWERSHOP 🌸</h1>
-     </div>
-    </header>
-
-    <div id="warning-toast" class="fixed top-4 left-1/2 transform -translate-x-1/2 warning-toast px-6 py-3 rounded-xl shadow-lg z-50 hidden">
-     <div class="flex items-center gap-2"><span class="text-2xl">⚠️</span> <span class="font-medium text-amber-800">โปรดใส่ข้อมูลให้ครบ!</span>
-     </div>
+  <div id="app" class="min-h-full w-full p-3 md:p-6">
+   <div class="fixed inset-0 overflow-hidden pointer-events-none" id="petals-container"></div>
+   
+   <header class="text-center mb-4 bounce-in relative">
+    <div class="inline-block">
+     <h1 id="shop-title" class="text-2xl md:text-5xl font-bold text-pink-600 float">🌸 AAFLOWERSHOP 🌸</h1>
+     <p id="shop-subtitle" class="text-pink-400 mt-1 text-sm md:text-lg">บันทึกออเดอร์ดอกไม้</p>
     </div>
+   </header>
 
-    <div id="form-container" class="glass-card rounded-2xl p-3 md:p-6 mb-4 shadow-lg fade-in max-w-3xl mx-auto border-2 border-pink-100">
-     <div class="flex justify-between items-center mb-2">
-        <h2 class="text-lg md:text-xl font-semibold text-pink-600 flex items-center gap-2"><span class="text-xl">💐</span> เพิ่มออเดอร์</h2>
-        <button id="toggle-form" class="text-pink-400 text-sm underline md:hidden" onclick="toggleFormVisibility()">ย่อ/ขยาย</button>
-     </div>
-     
-     <div id="form-content">
-         <div class="grid grid-cols-12 gap-2 md:gap-4">
-            
-            <div class="col-span-12 md:col-span-4">
-                <label class="block text-pink-600 font-medium mb-1 text-xs md:text-sm">👤 ชื่อลูกค้า *</label> 
-                <input type="text" id="customer-name" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80 text-gray-700 text-sm" placeholder="ชื่อลูกค้า">
-            </div>
-
-            <div class="col-span-6 md:col-span-2">
-                <label class="block text-pink-600 font-medium mb-1 text-xs md:text-sm">🌷 จำนวน *</label> 
-                <input type="number" id="flower-count" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80 text-gray-700 text-sm" placeholder="0" min="1">
-            </div>
-            <div class="col-span-6 md:col-span-2">
-                <label class="block text-pink-600 font-medium mb-1 text-xs md:text-sm">🎫 คิว *</label> 
-                <input type="number" id="queue-number" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80 text-gray-700 text-sm" placeholder="0" min="1">
-            </div>
-
-            <div class="col-span-6 md:col-span-2">
-                <label class="block text-pink-600 font-medium mb-1 text-xs md:text-sm">📅 วันที่ *</label> 
-                <input type="date" id="order-date" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80 text-gray-700 text-sm">
-            </div>
-            <div class="col-span-6 md:col-span-2">
-                <label class="block text-pink-600 font-medium mb-1 text-xs md:text-sm">💰 ราคา *</label> 
-                <input type="number" id="price" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80 text-gray-700 text-sm" placeholder="0" min="0">
-            </div>
-
-            <div class="col-span-12">
-                <label class="block text-pink-600 font-medium mb-1 text-xs md:text-sm">📝 หมายเหตุ</label> 
-                <input type="text" id="notes" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80 text-gray-700 text-sm" placeholder="อื่นๆ / หมายเหตุ">
-            </div>
-         </div>
-
-         <div class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-3">
-            <div class="bg-purple-50 rounded-xl p-2 border border-purple-100">
-                <div class="flex justify-between items-center mb-1">
-                    <label class="text-purple-600 font-semibold text-xs flex items-center gap-1"> 🌸 สีดอก </label>
-                    <div class="flex flex-wrap gap-1 min-h-[20px]" id="selected-flower-colors"><span class="text-purple-300 text-[10px]">เลือกสี</span></div>
-                </div>
-                <div id="flower-colors-picker" class="flex flex-wrap gap-1 justify-start"></div>
-            </div>
-            
-            <div class="bg-purple-50 rounded-xl p-2 border border-purple-100">
-                <div class="flex justify-between items-center mb-1">
-                    <label class="text-purple-600 font-semibold text-xs flex items-center gap-1"> 💐 สีช่อ </label>
-                    <div class="flex flex-wrap gap-1 min-h-[20px]" id="selected-bouquet-colors"><span class="text-purple-300 text-[10px]">เลือกสี</span></div>
-                </div>
-                <div id="bouquet-colors-picker" class="flex flex-wrap gap-1 justify-start"></div>
-            </div>
-         </div>
-
-         <div class="mt-4 text-center">
-            <button id="add-order-btn" class="btn-primary text-white w-full md:w-auto px-6 py-2 rounded-xl font-semibold text-base shadow-md active:scale-95 transition-transform"> ✨ เพิ่มออเดอร์ ✨ </button>
-         </div>
-     </div>
-    </div>
-
-    <div class="glass-card rounded-3xl p-3 md:p-6 shadow-2xl fade-in w-full mx-auto overflow-hidden min-h-[500px] flex flex-col">
-     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4 gap-2 sticky left-0">
-      <h2 class="text-xl font-semibold text-pink-600 flex items-center gap-2"><span class="text-2xl">📋</span> รายการออเดอร์</h2>
-      <div class="flex items-center gap-2">
-          <span id="order-count" class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-xs font-medium border border-pink-200">0 รายการ</span> 
-          <span id="total-revenue" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium border border-green-200">฿0</span>
+   <div id="form-container" class="glass-card rounded-2xl p-4 mb-6 shadow-lg fade-in max-w-2xl mx-auto border-pink-200 border-2">
+    <h2 class="text-lg font-semibold text-pink-600 mb-3 flex items-center gap-2">
+      <span class="text-xl">💐</span> เพิ่มออเดอร์
+    </h2>
+    
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div class="col-span-2 md:col-span-1">
+        <label class="block text-pink-600 font-medium mb-1 text-xs">👤 ชื่อลูกค้า *</label> 
+        <input type="text" id="customer-name" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80" placeholder="ชื่อลูกค้า">
       </div>
-     </div>
-     
-     <div class="overflow-x-auto scrollbar-pink flex-grow">
-      <table class="w-full min-w-[800px] border-collapse">
-       <thead class="sticky top-0 z-10">
-        <tr class="bg-pink-200 text-pink-800">
-         <th class="px-2 py-3 rounded-tl-lg text-left text-sm whitespace-nowrap">คิว</th>
-         <th class="px-2 py-3 text-left text-sm whitespace-nowrap">ชื่อลูกค้า</th>
-         <th class="px-2 py-3 text-center text-sm whitespace-nowrap">จำนวน</th>
-         <th class="px-2 py-3 text-center text-sm whitespace-nowrap">สีดอก</th>
-         <th class="px-2 py-3 text-center text-sm whitespace-nowrap">สีช่อ</th>
-         <th class="px-2 py-3 text-center text-sm whitespace-nowrap">วันที่</th>
-         <th class="px-2 py-3 text-right text-sm whitespace-nowrap">ราคา</th>
-         <th class="px-2 py-3 text-left text-sm min-w-[150px]">หมายเหตุ</th>
-         <th class="px-2 py-3 text-center text-sm whitespace-nowrap">จ่าย</th>
-         <th class="px-2 py-3 rounded-tr-lg text-center text-sm whitespace-nowrap">ลบ</th>
-        </tr>
-       </thead>
-       <tbody id="orders-table-body" class="bg-white/50">
-        <tr>
-         <td colspan="10" class="text-center py-12 text-pink-400">
-          <div class="text-5xl mb-3 opacity-50">🌷</div>
-          <p>ยังไม่มีออเดอร์</p>
-         </td>
-        </tr>
-       </tbody>
-      </table>
-     </div>
+      <div>
+        <label class="block text-pink-600 font-medium mb-1 text-xs">🌷 จำนวน *</label> 
+        <input type="number" id="flower-count" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80" placeholder="0">
+      </div>
+      <div>
+        <label class="block text-pink-600 font-medium mb-1 text-xs">🎫 คิว *</label> 
+        <input type="number" id="queue-number" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80" placeholder="0">
+      </div>
+      <div class="col-span-1">
+        <label class="block text-pink-600 font-medium mb-1 text-xs">📅 วันที่ *</label> 
+        <input type="date" id="order-date" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80">
+      </div>
+      <div class="col-span-1">
+        <label class="block text-pink-600 font-medium mb-1 text-xs">💰 ราคา *</label> 
+        <input type="number" id="price" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80" placeholder="฿">
+      </div>
+      <div class="col-span-2 md:col-span-1">
+        <label class="block text-pink-600 font-medium mb-1 text-xs">📝 หมายเหตุ</label> 
+        <input type="text" id="notes" class="input-field w-full px-3 py-1.5 rounded-lg bg-white/80" placeholder="...">
+      </div>
     </div>
 
-    <div id="delete-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-     <div class="glass-card rounded-3xl p-6 max-w-xs w-full bounce-in text-center">
-       <div class="text-5xl mb-4">🗑️</div>
-       <h3 class="text-lg font-semibold text-pink-600 mb-2">ลบรายการนี้?</h3>
-       <div class="flex gap-2 justify-center mt-4">
-           <button id="cancel-delete-btn" class="flex-1 px-4 py-2 rounded-xl bg-gray-100 text-gray-600 text-sm font-medium hover:bg-gray-200"> ยกเลิก </button> 
-           <button id="confirm-delete-btn" class="flex-1 px-4 py-2 rounded-xl bg-red-500 text-white text-sm font-medium hover:bg-red-600 shadow-lg shadow-red-200"> ลบเลย </button>
-       </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+      <div class="bg-purple-50/50 rounded-xl p-3 border border-purple-100">
+        <label class="block text-purple-600 font-semibold mb-2 text-[11px] uppercase tracking-wider">🌸 สีดอกไม้</label>
+        <div id="flower-colors-picker" class="flex flex-wrap gap-1 mb-2 max-h-[60px] overflow-y-auto scrollbar-pink p-1"></div>
+        <div class="flex flex-wrap gap-1 mt-1 min-h-[24px]" id="selected-flower-colors"></div>
+      </div>
+      <div class="bg-purple-50/50 rounded-xl p-3 border border-purple-100">
+        <label class="block text-purple-600 font-semibold mb-2 text-[11px] uppercase tracking-wider">💐 สีช่อ</label>
+        <div id="bouquet-colors-picker" class="flex flex-wrap gap-1 mb-2 max-h-[60px] overflow-y-auto scrollbar-pink p-1"></div>
+        <div class="flex flex-wrap gap-1 mt-1 min-h-[24px]" id="selected-bouquet-colors"></div>
+      </div>
+    </div>
+
+    <div class="mt-4 text-center">
+      <button id="add-order-btn" class="btn-primary text-white px-6 py-2 rounded-full font-semibold text-sm pulse-glow"> ✨ บันทึก ✨ </button>
+    </div>
+   </div>
+
+   <div class="glass-card rounded-2xl p-3 md:p-6 shadow-xl fade-in max-w-[1400px] mx-auto overflow-hidden border-white/40 border-2">
+    <div class="flex items-center justify-between mb-4 px-1">
+     <h2 class="text-lg md:text-2xl font-semibold text-pink-600 flex items-center gap-2"><span class="text-xl">📋</span> รายการ</h2>
+     <div class="flex items-center gap-1 md:gap-2">
+       <span id="order-count" class="bg-pink-100 text-pink-600 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-sm font-bold border border-pink-200">0 รายการ</span> 
+       <span id="total-revenue" class="bg-green-100 text-green-700 px-2 md:px-3 py-1 rounded-full text-[10px] md:text-sm font-bold border border-green-200">฿0</span>
      </div>
     </div>
+    
+    <div class="overflow-x-auto scrollbar-pink rounded-xl border border-pink-100">
+     <table class="w-full min-w-[850px] text-sm md:text-base">
+      <thead>
+       <tr class="bg-gradient-to-r from-pink-200 to-pink-300 text-pink-800">
+        <th class="px-3 py-3 text-center w-16">คิว</th>
+        <th class="px-3 py-3 text-left">ลูกค้า</th>
+        <th class="px-3 py-3 text-center">จำนวน</th>
+        <th class="px-3 py-3 text-center">สีดอก</th>
+        <th class="px-3 py-3 text-center">สีช่อ</th>
+        <th class="px-3 py-3 text-center">วันที่</th>
+        <th class="px-3 py-3 text-right">ราคา</th>
+        <th class="px-3 py-3 text-left">หมายเหตุ</th>
+        <th class="px-3 py-3 text-center">จ่าย</th>
+        <th class="px-3 py-3 text-center">ลบ</th>
+       </tr>
+      </thead>
+      <tbody id="orders-table-body" class="bg-white/50">
+       <tr><td colspan="10" class="text-center py-10 text-pink-300 font-light italic">🌷 ยังไม่มีรายการออเดอร์...</td></tr>
+      </tbody>
+     </table>
+    </div>
+   </div>
+
+   <div id="delete-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card rounded-3xl p-6 max-w-xs w-full bounce-in text-center">
+      <div class="text-4xl mb-3">🗑️</div>
+      <h3 class="text-lg font-bold text-pink-600 mb-1">ลบรายการนี้?</h3>
+      <p class="text-gray-500 text-sm mb-5">ข้อมูลจะหายไปถาวรนะจ๊ะ</p>
+      <div class="flex gap-2">
+        <button id="cancel-delete-btn" class="flex-1 py-2 rounded-xl bg-gray-100 text-gray-500 font-medium">ไม่ลบ</button>
+        <button id="confirm-delete-btn" class="flex-1 py-2 rounded-xl bg-red-500 text-white font-medium shadow-lg shadow-red-200">ลบเลย</button>
+      </div>
+    </div>
+   </div>
+
+   <div id="warning-toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-amber-50 border-2 border-amber-200 px-6 py-3 rounded-2xl shadow-xl z-[60] hidden">
+     <div class="flex items-center gap-2 text-amber-700 font-medium">⚠️ ใส่ข้อมูลให้ครบนะ!</div>
+   </div>
   </div>
 
   <script>
-    // --- MOCK SDK ---
     if (!window.dataSdk) {
       window.dataSdk = {
-        init: async (handler) => { window._mockHandler = handler; return { isOk: true }; },
-        create: async (data) => { await new Promise(r => setTimeout(r, 300)); return { isOk: true }; },
-        update: async (data) => { return { isOk: true }; },
-        delete: async (data) => { return { isOk: true }; }
+        init: async (h) => { window._mockH = h; return { isOk: true }; },
+        create: async (d) => { await new Promise(r => setTimeout(r, 400)); return { isOk: true }; },
+        update: async (d) => { return { isOk: true }; },
+        delete: async (d) => { return { isOk: true }; }
       };
     }
 
     const colorPalette = [
-      '#FF4444', '#FF8888', '#FF69B4', '#FFB6C1', '#FFE4E1',
-      '#FF7F50', '#FFA500', '#FFD700', '#FFFFE0', '#98FB98',
-      '#2E8B57', '#40E0D0', '#87CEEB', '#4169E1', '#9400D3',
-      '#DDA0DD', '#D2691E', '#F5F5F5', '#808080', '#000000',
+      '#FF6B6B', '#FF8E8E', '#FFB7B7', '#FF1493', '#FF69B4', '#FFC0CB', 
+      '#FF4500', '#FFA500', '#FFD700', '#FFFF00', '#90EE90', '#00FA9A',
+      '#3CB371', '#00CED1', '#40E0D0', '#4169E1', '#87CEEB', '#8B00FF',
+      '#DA70D6', '#E6E6FA', '#8B4513', '#CD853F', '#FFFFFF', '#DCDCDC', '#000000'
     ];
     
     let orders = [];
@@ -340,310 +312,175 @@
     let selectedBouquetColors = [];
     let pendingDeleteRecord = null;
     let isLoading = false;
-    
-    const defaultConfig = {
-      shop_name: 'AAFLOWERSHOP',
-      subtitle_text: 'บันทึกออเดอร์ดอกไม้',
-      primary_color: '#EC4899',
-      secondary_color: '#F9A8D4',
-      background_color: '#FDF2F8',
-      text_color: '#831843',
-      accent_color: '#DB2777'
-    };
-    
-    let config = { ...defaultConfig };
-    
-    function toggleFormVisibility() {
-        const content = document.getElementById('form-content');
-        if (content.style.display === 'none') {
-            content.style.display = 'block';
-        } else {
-            content.style.display = 'none';
-        }
-    }
 
     function initColorPickers() {
-      const flowerPicker = document.getElementById('flower-colors-picker');
-      const bouquetPicker = document.getElementById('bouquet-colors-picker');
+      const fPicker = document.getElementById('flower-colors-picker');
+      const bPicker = document.getElementById('bouquet-colors-picker');
       
       colorPalette.forEach(color => {
-        const flowerBtn = document.createElement('button');
-        flowerBtn.type = 'button';
-        flowerBtn.className = 'color-picker-btn';
-        flowerBtn.style.backgroundColor = color;
-        flowerBtn.onclick = () => toggleFlowerColor(color, flowerBtn);
-        flowerPicker.appendChild(flowerBtn);
-        
-        const bouquetBtn = document.createElement('button');
-        bouquetBtn.type = 'button';
-        bouquetBtn.className = 'color-picker-btn';
-        bouquetBtn.style.backgroundColor = color;
-        bouquetBtn.onclick = () => toggleBouquetColor(color, bouquetBtn);
-        bouquetPicker.appendChild(bouquetBtn);
+        const fBtn = createColorBtn(color, 'flower');
+        const bBtn = createColorBtn(color, 'bouquet');
+        fPicker.appendChild(fBtn);
+        bPicker.appendChild(bBtn);
       });
     }
-    
-    function toggleFlowerColor(color, btn) {
-      const index = selectedFlowerColors.indexOf(color);
-      if (index > -1) {
-        selectedFlowerColors.splice(index, 1);
-        btn.classList.remove('selected');
-      } else {
-        selectedFlowerColors.push(color);
-        btn.classList.add('selected');
-      }
-      updateSelectedColorsDisplay('flower');
+
+    function createColorBtn(color, type) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'color-picker-btn';
+      btn.style.backgroundColor = color;
+      btn.onclick = () => {
+        const list = type === 'flower' ? selectedFlowerColors : selectedBouquetColors;
+        const idx = list.indexOf(color);
+        if (idx > -1) {
+          list.splice(idx, 1);
+          btn.classList.remove('selected');
+        } else {
+          list.push(color);
+          btn.classList.add('selected');
+        }
+        updateSelectedDisplay(type);
+      };
+      return btn;
     }
-    
-    function toggleBouquetColor(color, btn) {
-      const index = selectedBouquetColors.indexOf(color);
-      if (index > -1) {
-        selectedBouquetColors.splice(index, 1);
-        btn.classList.remove('selected');
-      } else {
-        selectedBouquetColors.push(color);
-        btn.classList.add('selected');
-      }
-      updateSelectedColorsDisplay('bouquet');
-    }
-    
-    function updateSelectedColorsDisplay(type) {
-      const container = document.getElementById(type === 'flower' ? 'selected-flower-colors' : 'selected-bouquet-colors');
+
+    function updateSelectedDisplay(type) {
+      const container = document.getElementById(`selected-${type}-colors`);
       const colors = type === 'flower' ? selectedFlowerColors : selectedBouquetColors;
-      
-      if (colors.length === 0) {
-        container.innerHTML = `<span class="text-purple-300 text-[10px]">เลือกสี</span>`;
-      } else {
-        container.innerHTML = colors.map(c => 
-          `<span class="color-dot" style="background-color: ${c}; width: 14px; height: 14px;" title="${c}"></span>`
-        ).join('');
-      }
+      container.innerHTML = colors.map(c => `<span class="color-dot" style="background-color: ${c};"></span>`).join('');
     }
-    
-    function renderColorDots(colorsString) {
-      if (!colorsString) return '<span class="text-gray-300">-</span>';
-      const colors = colorsString.split(',').filter(c => c);
-      if (colors.length === 0) return '<span class="text-gray-300">-</span>';
-      return colors.map(c => 
-        `<span class="color-dot" style="background-color: ${c};" title="${c}"></span>`
-      ).join('');
-    }
-    
-    function showWarning() {
-      const toast = document.getElementById('warning-toast');
-      const formContainer = document.getElementById('form-container');
-      
-      toast.classList.remove('hidden');
-      formContainer.classList.add('shake');
-      
-      setTimeout(() => {
-        toast.classList.add('hidden');
-        formContainer.classList.remove('shake');
-      }, 2000);
-    }
-    
-    function validateForm() {
+
+    async function addOrder() {
+      if (isLoading) return;
       const name = document.getElementById('customer-name').value.trim();
       const count = document.getElementById('flower-count').value;
       const queue = document.getElementById('queue-number').value;
       const date = document.getElementById('order-date').value;
       const price = document.getElementById('price').value;
-      
-      return name && count && queue && date && price;
-    }
-    
-    function clearForm() {
-      document.getElementById('customer-name').value = '';
-      document.getElementById('flower-count').value = '';
-      document.getElementById('queue-number').value = '';
-      document.getElementById('price').value = '';
-      document.getElementById('notes').value = '';
-      
-      selectedFlowerColors = [];
-      selectedBouquetColors = [];
-      
-      document.querySelectorAll('.color-picker-btn.selected').forEach(btn => btn.classList.remove('selected'));
-      
-      updateSelectedColorsDisplay('flower');
-      updateSelectedColorsDisplay('bouquet');
-      
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('order-date').value = today;
-    }
-    
-    async function addOrder() {
-      if (isLoading) return;
-      
-      if (!validateForm()) {
-        showWarning();
+
+      if (!name || !count || !queue || !date || !price) {
+        const toast = document.getElementById('warning-toast');
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 2000);
         return;
       }
-      
+
       const orderData = {
-        customer_name: document.getElementById('customer-name').value.trim(),
-        flower_count: parseInt(document.getElementById('flower-count').value),
+        customer_name: name,
+        flower_count: parseInt(count),
         flower_colors: selectedFlowerColors.join(','),
         bouquet_colors: selectedBouquetColors.join(','),
-        order_date: document.getElementById('order-date').value,
-        price: parseFloat(document.getElementById('price').value),
+        order_date: date,
+        price: parseFloat(price),
         notes: document.getElementById('notes').value.trim(),
-        queue_number: parseInt(document.getElementById('queue-number').value),
+        queue_number: parseInt(queue),
         is_paid: false,
-        created_at: new Date().toISOString()
+        __backendId: 'id_' + Date.now()
       };
-      
+
       isLoading = true;
       const btn = document.getElementById('add-order-btn');
-      const originalText = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '⏳...';
-      
-      try {
-        const result = await window.dataSdk.create(orderData);
-        if (result.isOk) {
-          const tempOrder = { ...orderData, __backendId: 'temp_' + Date.now() };
-          orders.push(tempOrder);
-          renderOrders(orders);
-          clearForm();
-        } else {
-          showWarning();
-        }
-      } catch (e) {
-        console.error(e);
-        showWarning();
-      }
-      isLoading = false;
-      btn.disabled = false;
-      btn.innerHTML = originalText;
-    }
-    
-    async function togglePaid(record) {
-      if (isLoading) return;
-      record.is_paid = !record.is_paid;
-      renderOrders(orders);
-      isLoading = true;
-      try { await window.dataSdk.update(record); } catch(e) { record.is_paid = !record.is_paid; renderOrders(orders); }
-      isLoading = false;
-    }
-    
-    function showDeleteModal(record) {
-      pendingDeleteRecord = record;
-      document.getElementById('delete-modal').classList.remove('hidden');
-    }
-    
-    function hideDeleteModal() {
-      pendingDeleteRecord = null;
-      document.getElementById('delete-modal').classList.add('hidden');
-    }
-    
-    async function confirmDelete() {
-      if (!pendingDeleteRecord || isLoading) return;
-      isLoading = true;
-      document.getElementById('confirm-delete-btn').textContent = '...';
-      try {
-        await window.dataSdk.delete(pendingDeleteRecord);
-        orders = orders.filter(o => o.__backendId !== pendingDeleteRecord.__backendId);
+      btn.innerHTML = '⏳ บันทึก...';
+
+      const res = await window.dataSdk.create(orderData);
+      if (res.isOk) {
+        orders.push(orderData);
         renderOrders(orders);
-      } catch(e) {}
+        clearForm();
+      }
+      
       isLoading = false;
-      document.getElementById('confirm-delete-btn').textContent = 'ลบเลย';
-      hideDeleteModal();
+      btn.innerHTML = '✨ บันทึก ✨';
     }
-    
-    function formatDate(dateStr) {
-      if (!dateStr) return '-';
-      const date = new Date(dateStr);
-      return date.toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: '2-digit' });
+
+    function clearForm() {
+      ['customer-name', 'flower-count', 'queue-number', 'price', 'notes'].forEach(id => document.getElementById(id).value = '');
+      selectedFlowerColors = [];
+      selectedBouquetColors = [];
+      document.querySelectorAll('.color-picker-btn').forEach(b => b.classList.remove('selected'));
+      updateSelectedDisplay('flower');
+      updateSelectedDisplay('bouquet');
     }
-    
-    function formatPrice(price) {
-      return new Intl.NumberFormat('th-TH').format(price || 0);
-    }
-    
+
     function renderOrders(data) {
       const tbody = document.getElementById('orders-table-body');
-      const countEl = document.getElementById('order-count');
-      const revenueEl = document.getElementById('total-revenue');
+      const sorted = [...data].sort((a,b) => (a.queue_number||0) - (b.queue_number||0));
       
-      const sortedData = [...data].sort((a, b) => (a.queue_number || 0) - (b.queue_number || 0));
-      
-      countEl.textContent = `${data.length} รายการ`;
-      const totalRevenue = data.reduce((sum, o) => sum + (o.price || 0), 0);
-      revenueEl.textContent = `฿${formatPrice(totalRevenue)}`;
-      
-      if (sortedData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" class="text-center py-12 text-pink-400"><div class="text-5xl mb-3 opacity-50">🌷</div><p>ยังไม่มีออเดอร์</p></td></tr>`;
+      document.getElementById('order-count').textContent = `${data.length} รายการ`;
+      document.getElementById('total-revenue').textContent = `฿${new Intl.NumberFormat().format(data.reduce((s,o)=>s+(o.price||0),0))}`;
+
+      if (sorted.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" class="text-center py-10 text-pink-300">🌷 ยังไม่มีรายการออเดอร์...</td></tr>';
         return;
       }
-      
+
       tbody.innerHTML = '';
-      
-      sortedData.forEach((order, index) => {
-        const id = order.__backendId || ('temp_' + index);
-        const row = document.createElement('tr');
-        row.className = `table-row ${index % 2 === 0 ? 'bg-white/40' : 'bg-pink-50/40'} border-b border-pink-100/50`;
-        
-        row.innerHTML = `
-          <td class="px-2 py-3 text-center"><span class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded-md text-xs font-bold border border-pink-200">${order.queue_number || '-'}</span></td>
-          <td class="px-2 py-3 font-medium text-gray-700 text-sm">${order.customer_name || '-'}</td>
-          <td class="px-2 py-3 text-center text-gray-600 text-sm">${order.flower_count || 0}</td>
-          <td class="px-2 py-3 text-center">${renderColorDots(order.flower_colors)}</td>
-          <td class="px-2 py-3 text-center">${renderColorDots(order.bouquet_colors)}</td>
-          <td class="px-2 py-3 text-center text-gray-500 text-xs">${formatDate(order.order_date)}</td>
-          <td class="px-2 py-3 text-right font-semibold text-green-600 text-sm">฿${formatPrice(order.price)}</td>
-          <td class="px-2 py-3 text-gray-500 text-xs truncate max-w-[100px]">${order.notes || '-'}</td>
-          <td class="px-2 py-3 text-center"><input type="checkbox" class="checkbox-cute paid-checkbox scale-90" ${order.is_paid ? 'checked' : ''}></td>
-          <td class="px-2 py-3 text-center"><button class="delete-btn text-red-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors">🗑️</button></td>
+      sorted.forEach((o, i) => {
+        const tr = document.createElement('tr');
+        tr.className = `table-row border-b border-pink-50 ${i%2===0 ? 'bg-white/40' : 'bg-pink-50/20'}`;
+        tr.innerHTML = `
+          <td class="px-2 py-3 text-center"><span class="bg-pink-500 text-white px-2 py-0.5 rounded text-xs font-bold">${o.queue_number||'-'}</span></td>
+          <td class="px-3 py-3 font-medium text-gray-700">${o.customer_name}</td>
+          <td class="px-2 py-3 text-center">${o.flower_count}</td>
+          <td class="px-2 py-3 text-center">${renderDots(o.flower_colors)}</td>
+          <td class="px-2 py-3 text-center">${renderDots(o.bouquet_colors)}</td>
+          <td class="px-2 py-3 text-center text-xs text-gray-500">${o.order_date}</td>
+          <td class="px-3 py-3 text-right font-bold text-pink-600">฿${o.price}</td>
+          <td class="px-3 py-3 text-xs text-gray-400 truncate max-w-[100px]">${o.notes || '-'}</td>
+          <td class="px-2 py-3 text-center"><input type="checkbox" class="checkbox-cute" ${o.is_paid?'checked':''}></td>
+          <td class="px-2 py-3 text-center"><button class="text-red-300 hover:text-red-500">🗑️</button></td>
         `;
         
-        row.querySelector('.paid-checkbox').onchange = () => togglePaid(order);
-        row.querySelector('.delete-btn').onclick = () => showDeleteModal(order);
-        tbody.appendChild(row);
+        tr.querySelector('input').onclick = async () => {
+          o.is_paid = !o.is_paid;
+          await window.dataSdk.update(o);
+        };
+        tr.querySelector('button').onclick = () => {
+          pendingDeleteRecord = o;
+          document.getElementById('delete-modal').classList.remove('hidden');
+        };
+        tbody.appendChild(tr);
       });
     }
-    
+
+    function renderDots(str) {
+      if(!str) return '-';
+      return str.split(',').map(c => `<span class="color-dot" style="background-color:${c}"></span>`).join('');
+    }
+
+    // Modal Events
+    document.getElementById('cancel-delete-btn').onclick = () => document.getElementById('delete-modal').classList.add('hidden');
+    document.getElementById('confirm-delete-btn').onclick = async () => {
+      if(!pendingDeleteRecord) return;
+      await window.dataSdk.delete(pendingDeleteRecord);
+      orders = orders.filter(x => x.__backendId !== pendingDeleteRecord.__backendId);
+      renderOrders(orders);
+      document.getElementById('delete-modal').classList.add('hidden');
+    };
+
+    // Decoration
     function createPetals() {
       const container = document.getElementById('petals-container');
-      for (let i = 0; i < 10; i++) {
-        const petal = document.createElement('div');
-        petal.className = 'petal';
-        petal.style.left = Math.random() * 100 + '%';
-        petal.style.top = Math.random() * 100 + '%';
-        petal.style.animationDelay = Math.random() * 5 + 's';
-        petal.style.animation = `float ${5 + Math.random() * 5}s ease-in-out infinite`;
-        container.appendChild(petal);
+      for (let i = 0; i < 12; i++) {
+        const p = document.createElement('div');
+        p.className = 'petal';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.animation = `float ${3+Math.random()*3}s ease-in-out infinite`;
+        p.style.opacity = '0.4';
+        container.appendChild(p);
       }
     }
-    
-    // SDK Hooks
-    const dataHandler = { onDataChanged(data) { if(data) { orders = data; renderOrders(data); } } };
-    async function onConfigChange(cfg) {
-        config = { ...defaultConfig, ...cfg };
-        const titleEl = document.getElementById('shop-title');
-        if (titleEl) titleEl.textContent = `🌸 ${config.shop_name || defaultConfig.shop_name} 🌸`;
-    }
-    
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig, onConfigChange,
-        mapToCapabilities: (cfg) => ({ recolorables: [], borderables: [] }),
-        mapToEditPanelValues: (cfg) => new Map([['shop_name', cfg.shop_name]])
-      });
-    }
-    
+
     async function init() {
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('order-date').value = today;
+      document.getElementById('order-date').value = new Date().toISOString().split('T')[0];
       initColorPickers();
       createPetals();
-      document.getElementById('add-order-btn').addEventListener('click', addOrder);
-      document.getElementById('cancel-delete-btn').addEventListener('click', hideDeleteModal);
-      document.getElementById('confirm-delete-btn').addEventListener('click', confirmDelete);
-      document.getElementById('delete-modal').addEventListener('click', (e) => { if (e.target.id === 'delete-modal') hideDeleteModal(); });
-      
-      if (window.dataSdk) await window.dataSdk.init(dataHandler);
+      document.getElementById('add-order-btn').onclick = addOrder;
+      const res = await window.dataSdk.init({ onDataChanged: (d) => { if(d){orders=d; renderOrders(d);}}});
     }
-    
+
     init();
   </script>
  </body>
