@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AAFLOWERSHOP - ระบบบันทึกร้านดอกไม้</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-pink: #ff80ab;
+            --soft-pink: #fce4ec;
+            --pastel-purple: #d1c4e9;
+            --purple-border: #9575cd;
+            --text-dark: #4a4a4a;
+            --white: #ffffff;
+            --shadow: 0 8px 20px rgba(255, 105, 180, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Prompt', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
+            margin: 0;
+            padding: 20px;
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 4px solid #fff;
+            /* Animation ตอนโหลดหน้า */
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* --- Header --- */
+        h1 {
+            text-align: center;
+            color: var(--primary-pink);
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0px #ffd1dc;
+            animation: bounce 2s infinite;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        /* --- Form Grid --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #d81b60;
+        }
+
+        input[type="text"], 
+        input[type="number"], 
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: 0.3s;
+            background: #fafafa;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-pink);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(255, 128, 171, 0.1);
+        }
+
+        /* --- Color Selection UI --- */
+        .color-section {
+            background: #fdf5f7;
+            padding: 15px;
+            border-radius: 15px;
+            border: 1px dashed var(--primary-pink);
+            margin-bottom: 20px;
+        }
+
+        .color-label {
+            font-weight: 600;
+            color: #8e24aa;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .color-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .color-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px; /* สี่เหลี่ยมมนนิดๆ */
+            cursor: pointer;
+            border: 3px solid var(--pastel-purple); /* กรอบม่วงพาสเทล */
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+
+        .color-box:hover {
+            transform: scale(1.1);
+        }
+
+        /* Active State (Selected) */
+        .color-box.active {
+            transform: scale(1.15);
+            box-shadow: 0 0 0 2px var(--primary-pink);
+            border-color: var(--primary-pink);
+        }
+
+        .color-box.active::after {
+            content: '✓';
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* --- Checkbox Design --- */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+        
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-pink);
+        }
+
+        /* --- Buttons --- */
+        .btn-save {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff80ab, #ff4081);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 64, 129, 0.4);
+        }
+
+        .btn-save:active {
+            transform: scale(0.98);
+        }
+
+        /* --- Table Section --- */
+        .table-container {
+            margin-top: 40px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background: var(--pastel-purple);
+            color: #5e35b1;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        tr:hover {
+            background-color: #fce4ec;
+        }
+
+        /* Color Dots in Table */
+        .dot-wrapper {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .color-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.1);
+            display: inline-block;
+        }
+
+        .status-paid {
+            color: #2e7d32;
+            font-weight: bold;
+            background: #e8f5e9;
+            padding: 4px 8px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .status-unpaid {
+            color: #c62828;
+            font-weight: bold;
+            background: #ffebee;
+            padding: 4px 8px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .btn-delete {
+            background: #ff5252;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        /* --- Animations --- */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-10px);}
+            60% {transform: translateY(-5px);}
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .shake-active {
+            animation: shake 0.5s ease-in-out;
+            border-color: #ff1744 !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <h1>🌸 AAFLOWERSHOP 🌸</h1>
+        <p class="subtitle">ระบบบันทึกออเดอร์ร้านดอกไม้สุดคิ้วท์</p>
+
+        <form id="flowerForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>🎫 คิวที่</label>
+                    <input type="number" id="queue" placeholder="เช่น 1, 2, 3">
+                </div>
+                <div class="form-group">
+                    <label>📅 วันที่รับ</label>
+                    <input type="date" id="date">
+                </div>
+                <div class="form-group full-width">
+                    <label>👤 ชื่อลูกค้า</label>
+                    <input type="text" id="name" placeholder="ชื่อลูกค้า...">
+                </div>
+                <div class="form-group">
+                    <label>🌹 จำนวนดอก</label>
+                    <input type="number" id="amount" placeholder="ระบุจำนวน...">
+                </div>
+                <div class="form-group">
+                    <label>💰 ราคา (บาท)</label>
+                    <input type="number" id="price" placeholder="0.00">
+                </div>
+            </div>
+
+            <div class="color-section" id="flowerColorSection">
+                <span class="color-label">🌸 เลือกสีดอกไม้ (เลือกได้หลายสี)</span>
+                <div class="color-grid" id="flowerColorGrid">
+                    </div>
+            </div>
+
+            <div class="color-section" id="wrapperColorSection">
+                <span class="color-label">💐 เลือกสีช่อ/กระดาษห่อ (เลือกได้หลายสี)</span>
+                <div class="color-grid" id="wrapperColorGrid">
+                    </div>
+            </div>
+
+            <div class="form-group">
+                <label>📝 หมายเหตุ / อื่นๆ</label>
+                <textarea id="notes" rows="2" placeholder="รายละเอียดเพิ่มเติม..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" id="isPaid">
+                    <span>✅ จ่ายเงินแล้ว</span>
+                </label>
+            </div>
+
+            <button type="button" class="btn-save" onclick="saveData()">✨ บันทึกข้อมูล ✨</button>
+        </form>
+
+        <div class="table-container">
+            <h3>📋 รายการออเดอร์ล่าสุด</h3>
+            <table id="orderTable">
+                <thead>
+                    <tr>
+                        <th>คิว</th>
+                        <th>วันที่</th>
+                        <th>ชื่อ</th>
+                        <th>จำนวน</th>
+                        <th>สีดอก</th>
+                        <th>สีห่อ</th>
+                        <th>ราคา</th>
+                        <th>สถานะ</th>
+                        <th>หมายเหตุ</th>
+                        <th>ลบ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 1. Config สีทั้งหมด
+        const colors = [
+            { code: '#e53935', name: 'แดง' },
+            { code: '#f06292', name: 'ชมพูเข้ม' },
+            { code: '#f8bbd0', name: 'ชมพูอ่อน' },
+            { code: '#ba68c8', name: 'ม่วง' },
+            { code: '#9575cd', name: 'ม่วงพาสเทล' },
+            { code: '#64b5f6', name: 'ฟ้า' },
+            { code: '#4dd0e1', name: 'ฟ้าอมเขียว' },
+            { code: '#81c784', name: 'เขียว' },
+            { code: '#fff176', name: 'เหลือง' },
+            { code: '#ffb74d', name: 'ส้ม' },
+            { code: '#ffffff', name: 'ขาว' },
+            { code: '#424242', name: 'ดำ' },
+            { code: '#a1887f', name: 'น้ำตาล' }
+        ];
+
+        // State เก็บสีที่เลือก
+        let selectedFlowerColors = [];
+        let selectedWrapperColors = [];
+
+        // 2. ฟังก์ชันสร้าง Grid สี
+        function renderColorGrid(containerId, selectionArray) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            colors.forEach(color => {
+                const box = document.createElement('div');
+                box.className = 'color-box';
+                box.style.backgroundColor = color.code;
+                box.title = color.name;
+                
+                // กรณีสีขาว ใส่ขอบหน่อย
+                if(color.code === '#ffffff') box.style.border = '3px solid #ddd';
+
+                box.onclick = () => {
+                    // Toggle Selection
+                    const index = selectionArray.indexOf(color.code);
+                    if (index > -1) {
+                        selectionArray.splice(index, 1); // เอาออก
+                        box.classList.remove('active');
+                    } else {
+                        selectionArray.push(color.code); // ใส่เพิ่ม
+                        box.classList.add('active');
+                    }
+                };
+                container.appendChild(box);
+            });
+        }
+
+        // เริ่มต้นสร้าง Grid
+        renderColorGrid('flowerColorGrid', selectedFlowerColors);
+        renderColorGrid('wrapperColorGrid', selectedWrapperColors);
+
+        // 3. ฟังก์ชันบันทึกข้อมูล
+        function saveData() {
+            // ดึงค่าจาก Input
+            const queue = document.getElementById('queue').value;
+            const date = document.getElementById('date').value;
+            const name = document.getElementById('name').value;
+            const amount = document.getElementById('amount').value;
+            const price = document.getElementById('price').value;
+            const notes = document.getElementById('notes').value;
+            const isPaid = document.getElementById('isPaid').checked;
+
+            // --- Validation (เช็คข้อมูลครบไหม) ---
+            const mainContainer = document.getElementById('mainContainer');
+            
+            // เงื่อนไข: ต้องกรอก ชื่อ, คิว, และเลือกสีอย่างน้อย 1 สีทั้งสองหมวด
+            if (!name || !queue || !amount || selectedFlowerColors.length === 0 || selectedWrapperColors.length === 0) {
+                
+                // สั่งให้สั่น
+                mainContainer.classList.add('shake-active');
+                
+                // Alert
+                alert('⚠️ โปรดระบุข้อมูลให้ครบถ้วน!\n(ชื่อ, คิว, จำนวน และเลือกสีดอก/สีห่อ)');
+                
+                // ลบคลาสสั่นออก เพื่อให้สั่นใหม่ได้ครั้งหน้า
+                setTimeout(() => {
+                    mainContainer.classList.remove('shake-active');
+                }, 500);
+                return;
+            }
+
+            // สร้าง Object ข้อมูล
+            const order = {
+                id: Date.now(),
+                queue, date, name, amount, price, notes, isPaid,
+                flowerColors: [...selectedFlowerColors], // Copy array
+                wrapperColors: [...selectedWrapperColors]
+            };
+
+            // บันทึกลง LocalStorage
+            let orders = JSON.parse(localStorage.getItem('aaOrders')) || [];
+            orders.push(order);
+            localStorage.setItem('aaOrders', JSON.stringify(orders));
+
+            // Reset Form
+            document.getElementById('flowerForm').reset();
+            // Reset Colors
+            selectedFlowerColors = [];
+            selectedWrapperColors = [];
+            renderColorGrid('flowerColorGrid', selectedFlowerColors);
+            renderColorGrid('wrapperColorGrid', selectedWrapperColors);
+            
+            // Update Table
+            renderTable();
+            
+            alert('✅ บันทึกข้อมูลเรียบร้อยจ้า!');
+        }
+
+        // 4. ฟังก์ชันแสดงตาราง
+        function renderTable() {
+            const tbody = document.querySelector('#orderTable tbody');
+            const orders = JSON.parse(localStorage.getItem('aaOrders')) || [];
+            
+            tbody.innerHTML = '';
+
+            // เรียงลำดับจากใหม่ไปเก่า
+            orders.reverse().forEach(order => {
+                const tr = document.createElement('tr');
+
+                // สร้างจุดสี (Helper Function)
+                const createDots = (colors) => {
+                    return `<div class="dot-wrapper">
+                        ${colors.map(c => `<span class="color-dot" style="background:${c}"></span>`).join('')}
+                    </div>`;
+                };
+
+                tr.innerHTML = `
+                    <td>${order.queue}</td>
+                    <td>${order.date}</td>
+                    <td>${order.name}</td>
+                    <td>${order.amount}</td>
+                    <td>${createDots(order.flowerColors)}</td>
+                    <td>${createDots(order.wrapperColors)}</td>
+                    <td>${order.price}</td>
+                    <td>
+                        <span class="${order.isPaid ? 'status-paid' : 'status-unpaid'}">
+                            ${order.isPaid ? 'จ่ายแล้ว' : 'รอจ่าย'}
+                        </span>
+                    </td>
+                    <td>${order.notes}</td>
+                    <td>
+                        <button class="btn-delete" onclick="deleteOrder(${order.id})">ลบ</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 5. ฟังก์ชันลบ
+        function deleteOrder(id) {
+            if(confirm('ต้องการลบรายการนี้ใช่ไหม?')) {
+                let orders = JSON.parse(localStorage.getItem('aaOrders')) || [];
+                orders = orders.filter(o => o.id !== id);
+                localStorage.setItem('aaOrders', JSON.stringify(orders));
+                renderTable();
+            }
+        }
+
+        // โหลดตารางเมื่อเปิดเว็บ
+        renderTable();
+
+        // ตั้งค่าวันที่ปัจจุบันเป็น Default
+        document.getElementById('date').valueAsDate = new Date();
+
+    </script>
+</body>
+</html>
