@@ -247,7 +247,7 @@
         '#ffffff': 'ขาว'
     };
     // สร้างตัวแปลงกลับ (ชื่อไทย -> รหัสสี) ไว้ใช้ตอนดึงข้อมูลกลับมาโชว์
-    const NAME_TO_HEX = Object.fromEntries(Object.entries(COLOR_MAP).map(a => a.reverse()));
+    const NAME_TO_HEX = Object.fromEntries(Object.entries(COLOR_MAP).map(([k,v]) => [v,k]));
     const COLORS = Object.keys(COLOR_MAP);
 
     let orders = [];
@@ -274,8 +274,14 @@
         const res = await fetch(API_URL);
         const data = await res.json();
         orders = data.map(d => ({
-            ...d, 
-            is_paid: (d.is_paid === true || d.is_paid === 'TRUE' || d.is_paid === 'true')
+            ...d,
+            // ปรับชนิดข้อมูลให้แน่นอนเมื่อโหลดกลับมา
+            is_paid: (d.is_paid === true || d.is_paid === 'TRUE' || d.is_paid === 'true'),
+            price: parseFloat(d.price) || 0,
+            queue_number: parseInt(d.queue_number) || 0,
+            flower_count: parseInt(d.flower_count) || 0,
+            flower_colors: d.flower_colors || '',
+            bouquet_colors: d.bouquet_colors || ''
         }));
         renderTable();
       } catch (e) {
@@ -287,6 +293,7 @@
 
     /* --- แปลงรหัสสี เป็น ชื่อไทย --- */
     function colorsToNames(hexList) {
+        if (!Array.isArray(hexList) || hexList.length === 0) return '';
         return hexList.map(h => COLOR_MAP[h] || h).join(', ');
     }
 
@@ -324,6 +331,11 @@
       // เพิ่มลงตารางทันที
       orders.push(payloadDisplay);
       renderTable();
+
+      // บังคับซ่อน empty / โชว์ตาราง (กัน edge-case)
+      document.getElementById('empty-state').classList.add('hidden');
+      document.getElementById('table-wrapper').classList.remove('hidden');
+
       resetForm();
 
       try {
@@ -371,11 +383,15 @@
         }
     };
 
+    // --- แทนที่ของเดิม: renderTable แบบแก้ไขให้ปิด loading และซ่อน empty ได้ชัวร์ ---
     function renderTable() {
+      // ปิด loading ทุกครั้ง
+      showLoading(false);
+
       const tbody = document.getElementById('orders-list-body');
       const emptyState = document.getElementById('empty-state');
       const tableWrapper = document.getElementById('table-wrapper');
-      
+
       if (orders.length === 0) {
         showEmptyState("ยังไม่มีออเดอร์จ้า<br>รอรับลูกค้าคนแรกอยู่น้า...");
         document.getElementById('order-count').innerText = 0;
