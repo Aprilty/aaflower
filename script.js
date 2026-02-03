@@ -50,40 +50,8 @@ function init() {
 
 /* --- Functions --- */
 
-async function fetchOrders() {
-    showLoading(true);
-    showEmptyState("กำลังโหลดข้อมูล...");
-    try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        orders = data.map(d => ({
-            ...d, 
-            is_paid: (d.is_paid === true || d.is_paid === 'TRUE' || d.is_paid === 'true')
-        }));
-        renderTable();
-    } catch (e) {
-        console.error(e);
-        showEmptyState("โหลดไม่สำเร็จ T_T<br>ลองรีเฟรชใหม่นะ");
-    }
-    showLoading(false);
-}
-
-// แปลงรหัสสี -> ชื่อไทย (สำหรับส่ง Google Sheet)
-function colorsToNames(hexList) {
-    return hexList.map(h => COLOR_MAP[h] || h).join(', ');
-}
-
-// แปลงชื่อไทย -> จุดสี (สำหรับแสดงผลหน้าเว็บ)
-function renderDotsFromName(nameStr) {
-    if(!nameStr) return '';
-    return nameStr.split(',').map(name => {
-        const trimName = name.trim();
-        const hex = NAME_TO_HEX[trimName] || '#cccccc'; 
-        return `<div class="table-dot" style="background:${hex}" title="${trimName}"></div>`;
-    }).join(' ');
-}
-
-async function handleAdd() {
+aasync function handleAdd() {
+    // 1. ดึงค่าจากฟอร์ม
     const form = {
         name: document.getElementById('customer-name').value,
         queue: document.getElementById('queue-number').value,
@@ -93,14 +61,17 @@ async function handleAdd() {
         notes: document.getElementById('notes').value
     };
 
+    // 2. เช็คว่าใส่ข้อมูลครบไหม
     if (!form.name || !form.price) { alert('⚠️ ใส่ชื่อกับราคาหน่อยน้า'); return; }
 
     const btn = document.getElementById('add-order-btn');
     const originalText = btn.innerHTML;
-    btn.innerHTML = '⏳ กำลังส่ง...';
+    
+    // 3. เปลี่ยนปุ่มเป็น "บันทึกแล้ว" ทันที (เพื่อความสบายใจ)
+    btn.innerHTML = '✅ บันทึกแล้ว!';
     btn.disabled = true;
     
-    // ข้อมูลสำหรับแสดงผลทันที (Optimistic UI)
+    // 4. เตรียมข้อมูลแสดงผล (Optimistic UI)
     const payloadDisplay = {
         id: 'id_' + Date.now(),
         customer_name: form.name,
@@ -109,32 +80,30 @@ async function handleAdd() {
         order_date: form.date,
         price: parseFloat(form.price),
         notes: form.notes,
-        flower_colors: colorsToNames(state.fColors), // แปลงเป็นไทย
-        bouquet_colors: colorsToNames(state.bColors), // แปลงเป็นไทย
+        flower_colors: colorsToNames(state.fColors), // ชื่อไทย
+        bouquet_colors: colorsToNames(state.bColors), // ชื่อไทย
         is_paid: false
     };
 
+    // 5. เอาลงตารางเลย
     orders.push(payloadDisplay);
     renderTable();
     resetForm();
 
-    try {
-        // ใช้ mode: 'no-cors' เพื่อส่งแล้วไม่ต้องรอ Google ตอบกลับ (แก้ปัญหาโหลดค้าง)
-        await fetch(API_URL + "?action=create", {
-            method: 'POST',
-            mode: 'no-cors', 
-            headers: { "Content-Type": "text/plain" },
-            body: JSON.stringify(payloadDisplay)
-        });
-    } catch (e) {
-        console.log("Send Attempted (no-cors mode)"); 
-    }
+    // 6. ส่งไป Google Sheet แบบ "ไม่ต้องรอ" (เอา await ออก)
+    // ข้อมูลจะวิ่งอยู่เบื้องหลัง user ไม่ต้องรอโหลด
+    fetch(API_URL + "?action=create", {
+        method: 'POST',
+        mode: 'no-cors', 
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify(payloadDisplay)
+    }).catch(err => console.log("Background send error:", err));
 
-    // คืนค่าปุ่มทันที
+    // 7. คืนค่าปุ่มให้กดใหม่ได้ทันที (ใน 1 วินาที)
     setTimeout(() => {
         btn.innerHTML = originalText;
         btn.disabled = false;
-    }, 500);
+    }, 1000);
 }
 
 function resetForm() {
