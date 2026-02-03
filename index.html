@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AAFLOWERSHOP - บันทึกออเดอร์</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/_sdk/data_sdk.js"></script>
-  <script src="/_sdk/element_sdk.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&amp;family=Prompt:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
   <style>
     /* --- พื้นฐาน --- */
@@ -53,6 +51,17 @@
     .pop-row {
         animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
+    
+    /* --- Animation: Loading Spinner --- */
+    .spinner {
+      border: 3px solid rgba(236, 72, 153, 0.3);
+      border-radius: 50%;
+      border-top: 3px solid #db2777;
+      width: 20px; height: 20px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     /* --- Input Styles --- */
     .input-group label { display: block; color: #be185d; font-weight: 600; font-size: 11px; margin-bottom: 2px; }
@@ -106,6 +115,13 @@
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .scrollbar-pink::-webkit-scrollbar { width: 4px; height: 4px; }
     .scrollbar-pink::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 10px; }
+    
+    /* Loading Overlay */
+    #loading-overlay {
+      position: absolute; inset: 0; background: rgba(255,255,255,0.6); 
+      display: flex; align-items: center; justify-content: center; z-index: 50;
+      backdrop-filter: blur(2px); border-radius: 12px;
+    }
   </style>
  </head>
  <body class="h-full">
@@ -169,6 +185,13 @@
 
    <div class="glass-card rounded-xl overflow-hidden border border-pink-100 shadow-md flex-1 flex flex-col min-h-0 mb-4 relative z-10">
      
+     <div id="loading-overlay" class="hidden">
+       <div class="flex flex-col items-center text-pink-500 text-xs font-bold gap-2">
+         <div class="spinner"></div>
+         <span>กำลังโหลด...</span>
+       </div>
+     </div>
+
      <div class="bg-pink-50/80 p-2.5 flex justify-between items-center border-b border-pink-100 shrink-0">
        <h2 class="text-sm font-bold text-pink-700 flex items-center gap-2">
          📋 รายการวันนี้ <span id="order-count" class="bg-white text-pink-600 px-2 py-0.5 rounded-full text-xs shadow-sm">0</span>
@@ -176,9 +199,9 @@
        <div id="total-revenue" class="text-green-600 font-bold text-sm bg-white px-2 py-0.5 rounded-lg shadow-sm">฿0</div>
      </div>
 
-     <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center p-6 text-pink-300">
+     <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center p-6 text-pink-300 hidden">
         <div class="text-5xl mb-2 animate-bounce">🌷</div>
-        <p class="font-light text-sm">ยังไม่มีออเดอร์จ้า<br>รอรับลูกค้าคนแรกอยู่น้า...</p>
+        <p class="font-light text-sm">กำลังโหลดข้อมูล...</p>
      </div>
 
      <div id="table-wrapper" class="overflow-auto scrollbar-pink flex-1 hidden">
@@ -214,6 +237,9 @@
   </div>
 
   <script>
+    /* --- LINK CONNECT GOOGLE SHEET --- */
+    const API_URL = "https://script.google.com/macros/s/AKfycbxIrAI31xYNrCboyNNoOBDxA1k3n7WZzKn9Hg-sYLmReAZ7K58MTbIVaHi-xFRhL2oE/exec";
+    
     /* --- Configuration --- */
     const COLORS = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#10b981', '#06b6d4', '#3b82f6', '#8b5cf6', '#d946ef', '#f43f5e', '#1f2937', '#ffffff'];
     let orders = [];
@@ -231,11 +257,40 @@
       document.getElementById('cancel-delete-btn').onclick = () => toggleModal(false);
       document.getElementById('confirm-delete-btn').onclick = handleDelete;
       
-      if (!window.dataSdk) window.dataSdk = { init:async()=>{}, create:async()=>{return{isOk:true}}, update:async()=>{}, delete:async()=>{} };
-      window.dataSdk.init({ onDataChanged: (d) => { if(d) { orders=d; renderTable(); } } });
-      
-      // First Render to show empty state
-      renderTable();
+      // Load Initial Data
+      fetchOrders();
+    }
+
+    async function fetchOrders() {
+      showLoading(true);
+      showEmptyState("กำลังโหลดข้อมูล...");
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        orders = data.map(d => ({
+            ...d, 
+            // แปลงค่า is_paid ให้เป็น boolean (บางที sheet ส่งมาเป็น TRUE/FALSE string)
+            is_paid: (d.is_paid === true || d.is_paid === 'TRUE' || d.is_paid === 'true')
+        }));
+        renderTable();
+      } catch (e) {
+        console.error(e);
+        showEmptyState("โหลดไม่สำเร็จ T_T<br>ลองรีเฟรชใหม่นะ");
+      }
+      showLoading(false);
+    }
+
+    function showLoading(show) {
+        const overlay = document.getElementById('loading-overlay');
+        if(show) overlay.classList.remove('hidden'); else overlay.classList.add('hidden');
+    }
+
+    function showEmptyState(msg) {
+        const emptyState = document.getElementById('empty-state');
+        const tableWrapper = document.getElementById('table-wrapper');
+        emptyState.querySelector('p').innerHTML = msg;
+        emptyState.classList.remove('hidden');
+        tableWrapper.classList.add('hidden');
     }
 
     function createFallingFlowers() {
@@ -284,9 +339,12 @@
       if (!form.name || !form.price) { alert('⚠️ ใส่ชื่อกับราคาหน่อยน้า'); return; }
 
       const btn = document.getElementById('add-order-btn');
-      btn.innerText = 'กำลังบันทึก...';
+      const originalText = btn.innerText;
+      btn.innerText = '⏳ กำลังส่งข้อมูล...';
+      btn.disabled = true;
       
       const payload = {
+        id: 'id_' + Date.now(),
         customer_name: form.name,
         queue_number: parseInt(form.queue) || 0,
         flower_count: parseInt(form.count) || 1,
@@ -295,16 +353,28 @@
         notes: form.notes,
         flower_colors: state.fColors.join(','),
         bouquet_colors: state.bColors.join(','),
-        is_paid: false,
-        __backendId: 'id_' + Date.now()
+        is_paid: false
       };
 
-      await window.dataSdk.create(payload);
+      // Optimistic UI: เพิ่มลงตารางก่อนเลยเพื่อให้รู้สึกลื่น
       orders.push(payload);
-      
-      resetForm();
       renderTable();
-      btn.innerText = '✨ บันทึกออเดอร์ ✨';
+      resetForm();
+
+      try {
+        await fetch(API_URL + "?action=create", {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+      } catch (e) {
+        alert("บันทึกไม่สำเร็จ! เช็คเน็ตหน่อยนะ");
+        // ถ้าพัง ลบออกจาก array
+        orders = orders.filter(o => o.id !== payload.id);
+        renderTable();
+      }
+
+      btn.innerHTML = '<span>✨ บันทึกออเดอร์ ✨</span>';
+      btn.disabled = false;
     }
 
     function resetForm() {
@@ -317,11 +387,21 @@
     }
 
     window.togglePaid = async (id, isPaid) => {
-        const orderIndex = orders.findIndex(o => o.__backendId === id);
+        const orderIndex = orders.findIndex(o => o.id === id);
         if (orderIndex > -1) {
+            // Optimistic UI
             orders[orderIndex].is_paid = isPaid;
             renderTable();
-            await window.dataSdk.update(orders[orderIndex]);
+            
+            try {
+                await fetch(API_URL + "?action=update", {
+                    method: 'POST',
+                    body: JSON.stringify({id: id, is_paid: isPaid})
+                });
+            } catch(e) {
+                console.error("Update failed", e);
+                // Revert if failed (optional)
+            }
         }
     };
 
@@ -330,13 +410,11 @@
       const emptyState = document.getElementById('empty-state');
       const tableWrapper = document.getElementById('table-wrapper');
       
-      // --- Logic: ซ่อน/แสดง ตาราง ---
       if (orders.length === 0) {
-        emptyState.classList.remove('hidden');
-        tableWrapper.classList.add('hidden');
+        showEmptyState("ยังไม่มีออเดอร์จ้า<br>รอรับลูกค้าคนแรกอยู่น้า...");
         document.getElementById('order-count').innerText = 0;
         document.getElementById('total-revenue').innerText = '฿0';
-        return; // จบการทำงาน ไม่ต้องเรนเดอร์แถว
+        return;
       } else {
         emptyState.classList.add('hidden');
         tableWrapper.classList.remove('hidden');
@@ -349,7 +427,7 @@
       tbody.innerHTML = '';
       sorted.forEach(o => {
         const tr = document.createElement('tr');
-        tr.className = 'pop-row'; // เพิ่ม Animation Class
+        tr.className = 'pop-row'; 
         
         // สร้าง HTML สี
         let colorDisplay = '';
@@ -376,12 +454,12 @@
           </td>
           <td class="text-center align-middle">
              <label class="tgl-wrap">
-                <input type="checkbox" class="tgl-inp" ${o.is_paid ? 'checked' : ''} onchange="togglePaid('${o.__backendId}', this.checked)">
+                <input type="checkbox" class="tgl-inp" ${o.is_paid ? 'checked' : ''} onchange="togglePaid('${o.id}', this.checked)">
                 <div class="tgl-bg"><div class="tgl-ball"></div></div>
              </label>
           </td>
           <td class="text-center align-middle">
-             <button onclick="askDelete('${o.__backendId}')" class="text-gray-300 hover:text-red-500 transition-colors font-bold text-lg px-2">×</button>
+             <button onclick="askDelete('${o.id}')" class="text-gray-300 hover:text-red-500 transition-colors font-bold text-lg px-2">×</button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -393,14 +471,22 @@
       return str.split(',').map(c => `<div class="table-dot" style="background:${c}"></div>`).join(' ');
     }
 
-    window.askDelete = (id) => { pendingDelete = orders.find(o => o.__backendId === id); toggleModal(true); };
+    window.askDelete = (id) => { pendingDelete = orders.find(o => o.id === id); toggleModal(true); };
     window.handleDelete = async () => {
       if(pendingDelete) {
-        await window.dataSdk.delete(pendingDelete);
-        orders = orders.filter(o => o.__backendId !== pendingDelete.__backendId);
+        const idToDelete = pendingDelete.id;
+        
+        // Optimistic UI
+        orders = orders.filter(o => o.id !== idToDelete);
         renderTable();
+        toggleModal(false);
+
+        try {
+            await fetch(API_URL + "?action=delete&id=" + idToDelete);
+        } catch(e) {
+            alert("ลบไม่สำเร็จ เช็คเน็ตหน่อย");
+        }
       }
-      toggleModal(false);
     };
 
     function toggleModal(show) { const el = document.getElementById('delete-modal'); if(show) el.classList.remove('hidden'); else el.classList.add('hidden'); }
