@@ -4,10 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>AAFLOWERSHOP - ระบบจัดการออเดอร์</title>
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&amp;family=Prompt:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+  
   <style>
-    /* --- CSS พื้นฐาน & Animation --- */
+    /* --- CSS พื้นฐาน --- */
     body { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; overflow: hidden; }
     * { font-family: 'Kanit', 'Prompt', sans-serif; }
     
@@ -47,7 +53,7 @@
         animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
     
-    /* --- Styles อื่นๆ --- */
+    /* --- Input Styles --- */
     .input-group label { display: block; color: #be185d; font-weight: 600; font-size: 11px; margin-bottom: 2px; }
     .input-field {
       width: 100%; height: 38px !important; padding: 0 10px; border: 1px solid #fbcfe8; border-radius: 8px;
@@ -55,6 +61,7 @@
     }
     .input-field:focus { border-color: #ec4899; box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.15); outline: none; }
     
+    /* --- Toggle Switch --- */
     .tgl-wrap { position: relative; display: inline-block; width: 34px; height: 18px; }
     .tgl-inp { display: none; }
     .tgl-bg {
@@ -70,6 +77,13 @@
     .tgl-inp:checked + .tgl-bg { background-color: #10b981; }
     .tgl-inp:checked + .tgl-bg .tgl-ball { left: 18px; }
 
+    /* --- Custom Checkbox (มงกุฎ/ผีเสื้อ) --- */
+    .addon-checkbox:checked + div {
+        background-color: #fce7f3;
+        border-color: #ec4899;
+        color: #be185d;
+    }
+
     .glass-card { 
         background: rgba(255, 255, 255, 0.85); 
         backdrop-filter: blur(8px); 
@@ -83,11 +97,11 @@
     .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; }
     .custom-table th {
       background-color: rgba(255, 255, 255, 0.9);
-      color: #be185d; font-weight: 600; font-size: 12px; padding: 10px 6px;
+      color: #be185d; font-weight: 600; font-size: 11px; padding: 10px 4px;
       text-align: left; border-bottom: 2px solid #fbcfe8; white-space: nowrap;
     }
     .custom-table td {
-      padding: 10px 6px; border-bottom: 1px solid #fff0f5; vertical-align: middle;
+      padding: 8px 4px; border-bottom: 1px solid #fff0f5; vertical-align: middle;
       font-size: 13px; color: #374151;
     }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
@@ -99,14 +113,14 @@
   
   <div id="falling-container"></div>
 
-  <div id="app" class="h-full w-full p-3 pb-0 max-w-xl mx-auto relative flex flex-col">
+  <div id="app" class="h-full w-full p-2 pb-0 max-w-xl mx-auto relative flex flex-col">
    
-   <header class="text-center mb-3 mt-1 shrink-0">
-     <h1 class="text-2xl font-extrabold text-pink-600 tracking-wide cute-wiggle">🌸 AAFLOWERSHOP</h1>
+   <header class="text-center mb-2 mt-1 shrink-0">
+     <h1 class="text-xl font-extrabold text-pink-600 tracking-wide cute-wiggle">🌸 AAFLOWERSHOP</h1>
    </header>
 
-   <div class="glass-card rounded-2xl p-4 border-pink-100 border mb-3 shrink-0 relative z-10">
-    <div class="flex gap-3 mb-2">
+   <div class="glass-card rounded-2xl p-3 border-pink-100 border mb-2 shrink-0 relative z-10">
+    <div class="flex gap-2 mb-2">
       <div class="w-[70%] input-group">
         <label>ชื่อลูกค้า *</label> 
         <input type="text" id="customer-name" class="input-field" placeholder="ชื่อลูกค้า">
@@ -132,6 +146,21 @@
       </div>
     </div>
 
+    <div class="flex gap-2 mb-2">
+        <label class="flex-1 cursor-pointer">
+            <input type="checkbox" id="addon-crown" class="addon-checkbox hidden">
+            <div class="border border-pink-200 rounded-lg py-1.5 px-2 text-center text-xs text-gray-500 font-bold transition-colors">
+                👑 มงกุฎ
+            </div>
+        </label>
+        <label class="flex-1 cursor-pointer">
+            <input type="checkbox" id="addon-butterfly" class="addon-checkbox hidden">
+            <div class="border border-pink-200 rounded-lg py-1.5 px-2 text-center text-xs text-gray-500 font-bold transition-colors">
+                🦋 ผีเสื้อ
+            </div>
+        </label>
+    </div>
+
     <div class="input-group mb-2">
        <input type="text" id="notes" class="input-field" style="background-color: #fff1f2;" placeholder="📝 หมายเหตุเพิ่มเติม...">
     </div>
@@ -140,16 +169,16 @@
 
     <div class="space-y-2">
       <div class="flex items-center gap-2">
-        <span class="text-[11px] font-bold text-pink-500 w-10 shrink-0">🌸 ดอก</span>
+        <span class="text-[11px] font-bold text-pink-500 w-8 shrink-0">ดอก</span>
         <div id="flower-colors-picker" class="flex gap-1.5 overflow-x-auto hide-scrollbar flex-1 py-1 px-1"></div>
       </div>
       <div class="flex items-center gap-2">
-        <span class="text-[11px] font-bold text-purple-500 w-10 shrink-0">💐 ช่อ</span>
+        <span class="text-[11px] font-bold text-purple-500 w-8 shrink-0">ช่อ</span>
         <div id="bouquet-colors-picker" class="flex gap-1.5 overflow-x-auto hide-scrollbar flex-1 py-1 px-1"></div>
       </div>
     </div>
 
-    <button id="add-order-btn" class="mt-3 w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white py-2 rounded-xl font-bold shadow-lg shadow-pink-200 active:scale-95 transition-all flex justify-center items-center gap-2 text-sm">
+    <button id="add-order-btn" class="mt-2 w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white py-2 rounded-xl font-bold shadow-lg shadow-pink-200 active:scale-95 transition-all flex justify-center items-center gap-2 text-sm">
       <span>✨ บันทึกออเดอร์ ✨</span>
     </button>
    </div>
@@ -173,14 +202,14 @@
      </div>
 
      <div id="table-wrapper" class="overflow-auto scrollbar-pink flex-1 hidden">
-       <table class="custom-table w-full min-w-[550px]">
+       <table class="custom-table w-full min-w-[600px]">
          <thead class="sticky top-0 z-20">
            <tr>
-             <th class="w-[10%] text-center">คิว</th>
-             <th class="w-[30%]">ชื่อลูกค้า</th>
-             <th class="w-[10%] text-center">จำนวน</th>
+             <th class="w-[8%] text-center">วันที่</th> <th class="w-[8%] text-center">คิว</th>
+             <th class="w-[28%]">ชื่อลูกค้า</th>
+             <th class="w-[8%] text-center">จำนวน</th>
              <th class="w-[20%]">สี (ดอก/ช่อ)</th> 
-             <th class="w-[15%] text-right">ราคา</th>
+             <th class="w-[13%] text-right">ราคา</th>
              <th class="w-[10%] text-center">จ่าย?</th>
              <th class="w-[5%] text-center"></th>
            </tr>
@@ -192,10 +221,12 @@
   </div>
 
   <script>
-    // --- ตั้งค่า URL ---
+    // -----------------------------------------------------------------------
+    // ⚠️⚠️ วาง URL ที่ได้จาก Google Apps Script ตรงนี้เหมือนเดิมนะครับ ⚠️⚠️
+    // -----------------------------------------------------------------------
     const API_URL = "https://script.google.com/macros/s/AKfycbykNWYj-Bdit4PnqxRdOGHULxrxxNmO9G1p6lDz4wkSgQH3xiXPhqKA5zJxgLWHuN8zdQ/exec";
+    // -----------------------------------------------------------------------
 
-    // ข้อมูลสี (รหัสสี -> ชื่อไทย)
     const COLOR_MAP = {
         '#ef4444': 'แดง', '#f97316': 'ส้ม', '#eab308': 'เหลือง',
         '#84cc16': 'เขียวอ่อน', '#22c55e': 'เขียว', '#06b6d4': 'ฟ้า',
@@ -217,7 +248,7 @@
         fetchData();
     };
 
-    // --- 1. อ่านข้อมูล (GET) ---
+    // --- อ่านข้อมูล ---
     async function fetchData() {
         const loader = document.getElementById('loading-overlay');
         const empty = document.getElementById('empty-state');
@@ -226,7 +257,6 @@
         loader.classList.remove('hidden');
         
         try {
-            // ใช้ GET ปกติในการดึงข้อมูล
             const res = await fetch(API_URL + "?action=read");
             const data = await res.json();
             orders = data.reverse(); 
@@ -243,10 +273,11 @@
         }
     }
 
-    // --- 2. เพิ่มข้อมูล (POST แบบ no-cors) ---
+    // --- เพิ่มข้อมูล (พร้อม logic มงกุฎ/ผีเสื้อ) ---
     function handleAdd() {
         const name = document.getElementById('customer-name').value;
         const price = document.getElementById('price').value;
+        const dateVal = document.getElementById('order-date').value;
         
         if (!name) { alert('⚠️ ใส่ชื่อลูกค้าก่อนนะ'); return; }
         
@@ -254,20 +285,38 @@
         btn.innerHTML = '⏳ กำลังส่ง...';
         btn.disabled = true;
 
+        // จัดการเรื่อง Add-on (มงกุฎ / ผีเสื้อ)
+        const hasCrown = document.getElementById('addon-crown').checked;
+        const hasButterfly = document.getElementById('addon-butterfly').checked;
+        let noteText = document.getElementById('notes').value;
+        let addons = [];
+
+        if(hasCrown) addons.push("มงกุฎ");
+        if(hasButterfly) addons.push("ผีเสื้อ");
+
+        // ถ้าระบุ option ให้เติมเข้าไปใน Notes
+        if(addons.length > 0) {
+            const addonString = "[เพิ่ม: " + addons.join(" + ") + "]";
+            if(noteText) {
+                noteText = noteText + " " + addonString;
+            } else {
+                noteText = addonString;
+            }
+        }
+
         const newItem = {
             id: 'id_' + Date.now(),
             customer_name: name,
             queue_number: document.getElementById('queue-number').value || '-',
             flower_count: document.getElementById('flower-count').value || '1',
-            order_date: document.getElementById('order-date').value,
+            order_date: dateVal,
             price: price || '0',
-            notes: document.getElementById('notes').value,
+            notes: noteText, // ส่ง note ที่รวมคำแล้วไป
             flower_colors: state.fColors.map(c => COLOR_MAP[c] || c).join(', '),
             bouquet_colors: state.bColors.map(c => COLOR_MAP[c] || c).join(', '),
             is_paid: false
         };
 
-        // UI Update ทันที (Optimistic UI)
         orders.unshift(newItem);
         renderTable();
         resetForm();
@@ -278,36 +327,27 @@
             btn.disabled = false;
         }, 1500);
 
-        // ส่งข้อมูลเข้า Sheet (ใช้ no-cors เพื่อแก้ปัญหา GitHub -> Google)
         fetch(API_URL + "?action=create", {
             method: 'POST',
-            mode: 'no-cors', // สำคัญมากสำหรับ GitHub Pages
+            mode: 'no-cors',
             headers: { "Content-Type": "text/plain" },
             body: JSON.stringify(newItem)
         }).catch(e => console.error("Error saving:", e));
     }
 
-    // --- 3. ลบข้อมูล (POST แบบ no-cors) ---
+    // --- ลบข้อมูล ---
     function handleDelete(id) {
         if(!confirm('ลบรายการนี้ใช่ไหม?')) return;
-        
-        // ลบจากหน้าจอทันที
         orders = orders.filter(o => o.id !== id);
         renderTable();
-
-        // ส่งคำสั่งลบไปหลังบ้าน
-        fetch(API_URL + "?action=delete&id=" + id, {
-            method: 'POST',
-            mode: 'no-cors'
-        });
+        fetch(API_URL + "?action=delete&id=" + id, { method: 'POST', mode: 'no-cors' });
     }
 
-    // --- 4. อัปเดตจ่ายเงิน (POST แบบ no-cors) ---
+    // --- อัปเดตจ่ายเงิน ---
     function togglePaid(id, isPaid) {
         const item = orders.find(o => o.id == id);
         if (item) item.is_paid = isPaid;
         renderTable();
-
         fetch(API_URL + "?action=update", {
             method: 'POST',
             mode: 'no-cors',
@@ -315,7 +355,7 @@
         });
     }
 
-    // --- Helpers ---
+    // --- แสดงผลตาราง (เพิ่มวันที่) ---
     function renderTable() {
         const tbody = document.getElementById('orders-list-body');
         tbody.innerHTML = '';
@@ -327,15 +367,26 @@
             const tr = document.createElement('tr');
             tr.className = 'pop-row hover:bg-white/50 transition-colors';
             
-            // แปลงชื่อสีไทยกลับเป็นรหัสสีเพื่อแสดงผล (ถ้ามี)
             const fDots = getDots(order.flower_colors);
             const bDots = getDots(order.bouquet_colors);
+            
+            // แปลงวันที่เป็นรูปแบบสั้น (เช่น 14 ก.พ.)
+            let dateDisplay = "-";
+            if(order.order_date) {
+                const d = new Date(order.order_date);
+                if(!isNaN(d)) {
+                    dateDisplay = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
+                } else {
+                    dateDisplay = order.order_date; // กรณีข้อมูลเก่าเป็น text
+                }
+            }
 
             tr.innerHTML = `
+                <td class="text-center text-xs font-bold text-gray-500">${dateDisplay}</td>
                 <td class="text-center font-bold text-pink-600">${order.queue_number}</td>
                 <td>
                     <div class="font-bold text-gray-700 text-sm">${order.customer_name}</div>
-                    ${order.notes ? `<div class="text-[10px] text-gray-400 truncate max-w-[120px]">${order.notes}</div>` : ''}
+                    ${order.notes ? `<div class="text-[10px] text-pink-500 font-medium truncate max-w-[140px]">${order.notes}</div>` : ''}
                 </td>
                 <td class="text-center"><span class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-xs font-bold">${order.flower_count}</span></td>
                 <td>
@@ -370,12 +421,11 @@
 
     function getDots(colorString) {
         if(!colorString) return '';
-        // พยายามแปลงชื่อไทยกลับเป็นสี หรือถ้าไม่ได้ก็แสดงชื่อเดิม
         const reverseMap = {};
         for(let k in COLOR_MAP) reverseMap[COLOR_MAP[k]] = k;
 
         return colorString.split(', ').map(c => {
-            const hex = reverseMap[c] || c; // ลองหา Hex จากชื่อไทย
+            const hex = reverseMap[c] || c; 
             if(hex.startsWith('#')) {
                 return `<div class="w-2.5 h-2.5 rounded-full border border-gray-300 shadow-sm" style="background-color: ${hex};" title="${c}"></div>`;
             }
@@ -387,6 +437,8 @@
         document.getElementById('customer-name').value = '';
         document.getElementById('price').value = '';
         document.getElementById('notes').value = '';
+        document.getElementById('addon-crown').checked = false;     // รีเซ็ตมงกุฎ
+        document.getElementById('addon-butterfly').checked = false; // รีเซ็ตผีเสื้อ
         document.getElementById('customer-name').focus();
     }
 
