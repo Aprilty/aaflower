@@ -1,5 +1,5 @@
 /* --- CONFIGURATION --- */
-const API_URL = "https://script.google.com/macros/s/AKfycbwQ_jRw8ESrIEPCmfUGwZthG-BGbbEHGQBsPu8T6cHMdIci-DkvXk74MWqLarZd0DeWqQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxHpt_spcXXvDfiNj4dSs86D4OnQaQ-f1NDLYzRcMa1Rk5m0tAKYYuGI50Hb5QIons16Q/exec";
 
 /* --- ตั้งค่าสี และ ชื่อไทย --- */
 const COLOR_MAP = {
