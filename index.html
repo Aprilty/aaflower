@@ -3,16 +3,14 @@
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AAFLOWERSHOP - บันทึกออเดอร์</title>
+  <title>AAFLOWERSHOP - ระบบจัดการออเดอร์</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&amp;family=Prompt:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
-  
   <style>
-    /* --- CSS Styles (ตกแต่งหน้าตา) --- */
+    /* --- CSS พื้นฐาน & Animation --- */
     body { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; overflow: hidden; }
     * { font-family: 'Kanit', 'Prompt', sans-serif; }
     
-    /* Background Animation */
     #falling-container {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         pointer-events: none; z-index: -1; overflow: hidden;
@@ -32,8 +30,6 @@
         50% { transform: translateY(50vh) rotate(180deg) translateX(20px); }
         100% { transform: translateY(110vh) rotate(360deg) translateX(-20px); opacity: 0; }
     }
-
-    /* UI Animations */
     @keyframes wiggle {
         0%, 100% { transform: rotate(-3deg) scale(1); }
         50% { transform: rotate(3deg) scale(1.05); }
@@ -50,26 +46,15 @@
     .pop-row {
         animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
-    .spinner {
-      border: 3px solid rgba(236, 72, 153, 0.3);
-      border-radius: 50%;
-      border-top: 3px solid #db2777;
-      width: 20px; height: 20px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    /* Input Fields */
+    
+    /* --- Styles อื่นๆ --- */
     .input-group label { display: block; color: #be185d; font-weight: 600; font-size: 11px; margin-bottom: 2px; }
     .input-field {
       width: 100%; height: 38px !important; padding: 0 10px; border: 1px solid #fbcfe8; border-radius: 8px;
       font-size: 14px; background-color: #ffffff; transition: all 0.2s; -webkit-appearance: none;
     }
     .input-field:focus { border-color: #ec4899; box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.15); outline: none; }
-    input[type="date"] { display: block; min-height: 38px; padding-top: 8px; padding-bottom: 8px; }
-
-    /* Toggle Switch */
+    
     .tgl-wrap { position: relative; display: inline-block; width: 34px; height: 18px; }
     .tgl-inp { display: none; }
     .tgl-bg {
@@ -85,7 +70,16 @@
     .tgl-inp:checked + .tgl-bg { background-color: #10b981; }
     .tgl-inp:checked + .tgl-bg .tgl-ball { left: 18px; }
 
-    /* Table & Components */
+    .glass-card { 
+        background: rgba(255, 255, 255, 0.85); 
+        backdrop-filter: blur(8px); 
+        border: 1px solid rgba(255, 255, 255, 0.8); 
+        box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); 
+    }
+    .color-btn { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .color-btn.selected { border-color: #ec4899; transform: scale(1.2); ring: 2px solid #ec4899; }
+    
+    /* Table & Scroll */
     .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; }
     .custom-table th {
       background-color: rgba(255, 255, 255, 0.9);
@@ -96,25 +90,9 @@
       padding: 10px 6px; border-bottom: 1px solid #fff0f5; vertical-align: middle;
       font-size: 13px; color: #374151;
     }
-    .table-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 1px 1px rgba(0,0,0,0.1); display: inline-block; }
-    
-    .glass-card { 
-        background: rgba(255, 255, 255, 0.85); 
-        backdrop-filter: blur(8px); 
-        border: 1px solid rgba(255, 255, 255, 0.8); 
-        box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); 
-    }
-    .color-btn { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .color-btn.selected { border-color: #ec4899; transform: scale(1.2); }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     .scrollbar-pink::-webkit-scrollbar { width: 4px; height: 4px; }
     .scrollbar-pink::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 10px; }
-    
-    #loading-overlay {
-      position: absolute; inset: 0; background: rgba(255,255,255,0.6); 
-      display: flex; align-items: center; justify-content: center; z-index: 50;
-      backdrop-filter: blur(2px); border-radius: 12px;
-    }
   </style>
  </head>
  <body class="h-full">
@@ -142,7 +120,7 @@
     <div class="grid grid-cols-12 gap-2 mb-2">
       <div class="col-span-3 input-group">
         <label>จำนวน</label> 
-        <input type="number" id="flower-count" class="input-field text-center" placeholder="0" inputmode="numeric">
+        <input type="number" id="flower-count" class="input-field text-center" placeholder="1" value="1" inputmode="numeric">
       </div>
       <div class="col-span-5 input-group">
         <label>วันที่รับ *</label> 
@@ -178,11 +156,8 @@
 
    <div class="glass-card rounded-xl overflow-hidden border border-pink-100 shadow-md flex-1 flex flex-col min-h-0 mb-4 relative z-10">
      
-     <div id="loading-overlay" class="hidden">
-       <div class="flex flex-col items-center text-pink-500 text-xs font-bold gap-2">
-         <div class="spinner"></div>
-         <span>กำลังโหลด...</span>
-       </div>
+     <div id="loading-overlay" class="hidden absolute inset-0 bg-white/60 flex items-center justify-center z-50 backdrop-blur-sm">
+       <div class="text-pink-500 font-bold text-xs animate-pulse">กำลังโหลด...</div>
      </div>
 
      <div class="bg-pink-50/80 p-2.5 flex justify-between items-center border-b border-pink-100 shrink-0">
@@ -201,35 +176,260 @@
        <table class="custom-table w-full min-w-[550px]">
          <thead class="sticky top-0 z-20">
            <tr>
-             <th class="w-[8%] text-center">คิว</th>
-             <th class="w-[28%]">ชื่อลูกค้า</th>
+             <th class="w-[10%] text-center">คิว</th>
+             <th class="w-[30%]">ชื่อลูกค้า</th>
              <th class="w-[10%] text-center">จำนวน</th>
-             <th class="w-[22%]">สี (ดอก/ช่อ)</th> 
-             <th class="w-[12%] text-right">ราคา</th>
-             <th class="w-[12%] text-center">จ่าย?</th>
-             <th class="w-[8%] text-center">ลบ</th>
+             <th class="w-[20%]">สี (ดอก/ช่อ)</th> 
+             <th class="w-[15%] text-right">ราคา</th>
+             <th class="w-[10%] text-center">จ่าย?</th>
+             <th class="w-[5%] text-center"></th>
            </tr>
          </thead>
-         <tbody id="orders-list-body">
-            </tbody>
+         <tbody id="orders-list-body"></tbody>
        </table>
      </div>
    </div>
-
   </div>
 
-  <div id="delete-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl p-6 w-[260px] text-center shadow-2xl">
-      <div class="text-4xl mb-3">🗑️</div>
-      <h3 class="font-bold text-gray-700 mb-4">ลบรายการนี้ไหม?</h3>
-      <div class="flex gap-2 justify-center">
-        <button id="cancel-delete-btn" class="flex-1 py-2 rounded-lg bg-gray-100 text-gray-600 text-xs font-bold">ไม่ลบ</button>
-        <button id="confirm-delete-btn" class="flex-1 py-2 rounded-lg bg-red-500 text-white text-xs font-bold shadow-lg shadow-red-200">ลบเลย</button>
-      </div>
-    </div>
-  </div>
+  <script>
+    // --- ตั้งค่า URL ---
+    const API_URL = "https://script.google.com/macros/s/AKfycbykNWYj-Bdit4PnqxRdOGHULxrxxNmO9G1p6lDz4wkSgQH3xiXPhqKA5zJxgLWHuN8zdQ/exec";
 
-  <script src="script.js"></script>
+    // ข้อมูลสี (รหัสสี -> ชื่อไทย)
+    const COLOR_MAP = {
+        '#ef4444': 'แดง', '#f97316': 'ส้ม', '#eab308': 'เหลือง',
+        '#84cc16': 'เขียวอ่อน', '#22c55e': 'เขียว', '#06b6d4': 'ฟ้า',
+        '#3b82f6': 'น้ำเงิน', '#a855f7': 'ม่วง', '#ec4899': 'ชมพู',
+        '#ffffff': 'ขาว', '#000000': 'ดำ'
+    };
+    
+    const flowerColors = Object.keys(COLOR_MAP);
+    const bouquetColors = ['#ec4899', '#ef4444', '#ffffff', '#000000', '#3b82f6', '#eab308', '#a855f7'];
 
+    let state = { fColors: [], bColors: [] };
+    let orders = [];
+
+    window.onload = function() {
+        createFallingFlowers();
+        renderColorPickers();
+        document.getElementById('order-date').valueAsDate = new Date();
+        document.getElementById('add-order-btn').onclick = handleAdd;
+        fetchData();
+    };
+
+    // --- 1. อ่านข้อมูล (GET) ---
+    async function fetchData() {
+        const loader = document.getElementById('loading-overlay');
+        const empty = document.getElementById('empty-state');
+        const table = document.getElementById('table-wrapper');
+        
+        loader.classList.remove('hidden');
+        
+        try {
+            // ใช้ GET ปกติในการดึงข้อมูล
+            const res = await fetch(API_URL + "?action=read");
+            const data = await res.json();
+            orders = data.reverse(); 
+            renderTable();
+            
+            loader.classList.add('hidden');
+            empty.classList.add('hidden');
+            table.classList.remove('hidden');
+        } catch (err) {
+            console.error(err);
+            loader.classList.add('hidden');
+            empty.classList.remove('hidden');
+            document.querySelector('#empty-state p').innerText = "เชื่อมต่อไม่ได้ ลองรีเฟรชใหม่";
+        }
+    }
+
+    // --- 2. เพิ่มข้อมูล (POST แบบ no-cors) ---
+    function handleAdd() {
+        const name = document.getElementById('customer-name').value;
+        const price = document.getElementById('price').value;
+        
+        if (!name) { alert('⚠️ ใส่ชื่อลูกค้าก่อนนะ'); return; }
+        
+        const btn = document.getElementById('add-order-btn');
+        btn.innerHTML = '⏳ กำลังส่ง...';
+        btn.disabled = true;
+
+        const newItem = {
+            id: 'id_' + Date.now(),
+            customer_name: name,
+            queue_number: document.getElementById('queue-number').value || '-',
+            flower_count: document.getElementById('flower-count').value || '1',
+            order_date: document.getElementById('order-date').value,
+            price: price || '0',
+            notes: document.getElementById('notes').value,
+            flower_colors: state.fColors.map(c => COLOR_MAP[c] || c).join(', '),
+            bouquet_colors: state.bColors.map(c => COLOR_MAP[c] || c).join(', '),
+            is_paid: false
+        };
+
+        // UI Update ทันที (Optimistic UI)
+        orders.unshift(newItem);
+        renderTable();
+        resetForm();
+        
+        btn.innerHTML = '✅ เรียบร้อย!';
+        setTimeout(() => {
+            btn.innerHTML = '✨ บันทึกออเดอร์ ✨';
+            btn.disabled = false;
+        }, 1500);
+
+        // ส่งข้อมูลเข้า Sheet (ใช้ no-cors เพื่อแก้ปัญหา GitHub -> Google)
+        fetch(API_URL + "?action=create", {
+            method: 'POST',
+            mode: 'no-cors', // สำคัญมากสำหรับ GitHub Pages
+            headers: { "Content-Type": "text/plain" },
+            body: JSON.stringify(newItem)
+        }).catch(e => console.error("Error saving:", e));
+    }
+
+    // --- 3. ลบข้อมูล (POST แบบ no-cors) ---
+    function handleDelete(id) {
+        if(!confirm('ลบรายการนี้ใช่ไหม?')) return;
+        
+        // ลบจากหน้าจอทันที
+        orders = orders.filter(o => o.id !== id);
+        renderTable();
+
+        // ส่งคำสั่งลบไปหลังบ้าน
+        fetch(API_URL + "?action=delete&id=" + id, {
+            method: 'POST',
+            mode: 'no-cors'
+        });
+    }
+
+    // --- 4. อัปเดตจ่ายเงิน (POST แบบ no-cors) ---
+    function togglePaid(id, isPaid) {
+        const item = orders.find(o => o.id == id);
+        if (item) item.is_paid = isPaid;
+        renderTable();
+
+        fetch(API_URL + "?action=update", {
+            method: 'POST',
+            mode: 'no-cors',
+            body: JSON.stringify({ id: id, is_paid: isPaid })
+        });
+    }
+
+    // --- Helpers ---
+    function renderTable() {
+        const tbody = document.getElementById('orders-list-body');
+        tbody.innerHTML = '';
+        let total = 0;
+
+        orders.forEach(order => {
+            if (!order.is_paid) total += parseFloat(order.price) || 0;
+
+            const tr = document.createElement('tr');
+            tr.className = 'pop-row hover:bg-white/50 transition-colors';
+            
+            // แปลงชื่อสีไทยกลับเป็นรหัสสีเพื่อแสดงผล (ถ้ามี)
+            const fDots = getDots(order.flower_colors);
+            const bDots = getDots(order.bouquet_colors);
+
+            tr.innerHTML = `
+                <td class="text-center font-bold text-pink-600">${order.queue_number}</td>
+                <td>
+                    <div class="font-bold text-gray-700 text-sm">${order.customer_name}</div>
+                    ${order.notes ? `<div class="text-[10px] text-gray-400 truncate max-w-[120px]">${order.notes}</div>` : ''}
+                </td>
+                <td class="text-center"><span class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-xs font-bold">${order.flower_count}</span></td>
+                <td>
+                    <div class="flex flex-col gap-1">
+                        <div class="flex items-center gap-1 text-[10px] text-gray-500">
+                           <span class="text-pink-400 font-bold">ด:</span> <div class="flex gap-0.5 flex-wrap">${fDots || '-'}</div>
+                        </div>
+                        <div class="flex items-center gap-1 text-[10px] text-gray-500">
+                           <span class="text-purple-400 font-bold">ช:</span> <div class="flex gap-0.5 flex-wrap">${bDots || '-'}</div>
+                        </div>
+                    </div>
+                </td>
+                <td class="text-right font-bold text-gray-600">${Number(order.price).toLocaleString()}</td>
+                <td class="text-center">
+                    <label class="tgl-wrap">
+                        <input type="checkbox" class="tgl-inp" 
+                            ${order.is_paid ? 'checked' : ''} 
+                            onchange="togglePaid('${order.id}', this.checked)">
+                        <span class="tgl-bg"><span class="tgl-ball"></span></span>
+                    </label>
+                </td>
+                <td class="text-center">
+                    <button onclick="handleDelete('${order.id}')" class="text-red-300 hover:text-red-500 text-lg transition-colors">×</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('order-count').innerText = orders.length;
+        document.getElementById('total-revenue').innerText = '฿' + total.toLocaleString();
+    }
+
+    function getDots(colorString) {
+        if(!colorString) return '';
+        // พยายามแปลงชื่อไทยกลับเป็นสี หรือถ้าไม่ได้ก็แสดงชื่อเดิม
+        const reverseMap = {};
+        for(let k in COLOR_MAP) reverseMap[COLOR_MAP[k]] = k;
+
+        return colorString.split(', ').map(c => {
+            const hex = reverseMap[c] || c; // ลองหา Hex จากชื่อไทย
+            if(hex.startsWith('#')) {
+                return `<div class="w-2.5 h-2.5 rounded-full border border-gray-300 shadow-sm" style="background-color: ${hex};" title="${c}"></div>`;
+            }
+            return `<span>${c}</span>`;
+        }).join('');
+    }
+
+    function resetForm() {
+        document.getElementById('customer-name').value = '';
+        document.getElementById('price').value = '';
+        document.getElementById('notes').value = '';
+        document.getElementById('customer-name').focus();
+    }
+
+    function renderColorPickers() {
+        const render = (colors, elId, type) => {
+            const el = document.getElementById(elId);
+            el.innerHTML = '';
+            colors.forEach(c => {
+                const btn = document.createElement('div');
+                btn.className = 'color-btn transition-all duration-200';
+                btn.style.backgroundColor = c;
+                btn.onclick = () => {
+                    const arr = type === 'f' ? state.fColors : state.bColors;
+                    const idx = arr.indexOf(c);
+                    if (idx > -1) { 
+                        arr.splice(idx, 1); 
+                        btn.classList.remove('selected', 'scale-110'); 
+                    } else { 
+                        arr.push(c); 
+                        btn.classList.add('selected', 'scale-110'); 
+                    }
+                };
+                el.appendChild(btn);
+            });
+        };
+        render(flowerColors, 'flower-colors-picker', 'f');
+        render(bouquetColors, 'bouquet-colors-picker', 'b');
+    }
+
+    function createFallingFlowers() {
+        const container = document.getElementById('falling-container');
+        const emojis = ['🌸', '🌹', '🌺', '🌻', '🌷', '💐'];
+        for (let i = 0; i < 15; i++) {
+            const el = document.createElement('div');
+            el.className = 'falling-item';
+            el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.left = Math.random() * 100 + '%';
+            el.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            el.style.animationDelay = (Math.random() * 5) + 's';
+            el.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            container.appendChild(el);
+        }
+    }
+  </script>
  </body>
 </html>
