@@ -6,12 +6,13 @@
   <title>AAFLOWERSHOP - บันทึกออเดอร์</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&amp;family=Prompt:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+  
   <style>
-    /* --- พื้นฐาน --- */
+    /* --- CSS Styles (ตกแต่งหน้าตา) --- */
     body { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; overflow: hidden; }
     * { font-family: 'Kanit', 'Prompt', sans-serif; }
     
-    /* --- Background Animation: ดอกไม้ร่วง --- */
+    /* Background Animation */
     #falling-container {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         pointer-events: none; z-index: -1; overflow: hidden;
@@ -32,7 +33,7 @@
         100% { transform: translateY(110vh) rotate(360deg) translateX(-20px); opacity: 0; }
     }
 
-    /* --- Animation: ชื่อร้านดุ๊กดิ๊ก --- */
+    /* UI Animations */
     @keyframes wiggle {
         0%, 100% { transform: rotate(-3deg) scale(1); }
         50% { transform: rotate(3deg) scale(1.05); }
@@ -42,8 +43,6 @@
         animation: wiggle 2s ease-in-out infinite;
         text-shadow: 2px 2px 0px rgba(249, 168, 212, 0.5);
     }
-
-    /* --- Animation: แถวรายการเด้งเข้า (Pop In) --- */
     @keyframes pop-in {
         0% { opacity: 0; transform: translateY(-10px) scale(0.95); }
         100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -51,8 +50,6 @@
     .pop-row {
         animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
-    
-    /* --- Animation: Loading Spinner --- */
     .spinner {
       border: 3px solid rgba(236, 72, 153, 0.3);
       border-radius: 50%;
@@ -63,7 +60,7 @@
     }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* --- Input Styles --- */
+    /* Input Fields */
     .input-group label { display: block; color: #be185d; font-weight: 600; font-size: 11px; margin-bottom: 2px; }
     .input-field {
       width: 100%; height: 38px !important; padding: 0 10px; border: 1px solid #fbcfe8; border-radius: 8px;
@@ -72,7 +69,7 @@
     .input-field:focus { border-color: #ec4899; box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.15); outline: none; }
     input[type="date"] { display: block; min-height: 38px; padding-top: 8px; padding-bottom: 8px; }
 
-    /* --- Toggle Switch (ขนาดจิ๋วสำหรับใส่ในตาราง) --- */
+    /* Toggle Switch */
     .tgl-wrap { position: relative; display: inline-block; width: 34px; height: 18px; }
     .tgl-inp { display: none; }
     .tgl-bg {
@@ -88,7 +85,7 @@
     .tgl-inp:checked + .tgl-bg { background-color: #10b981; }
     .tgl-inp:checked + .tgl-bg .tgl-ball { left: 18px; }
 
-    /* --- Table Styles --- */
+    /* Table & Components */
     .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; }
     .custom-table th {
       background-color: rgba(255, 255, 255, 0.9);
@@ -99,11 +96,8 @@
       padding: 10px 6px; border-bottom: 1px solid #fff0f5; vertical-align: middle;
       font-size: 13px; color: #374151;
     }
-    .custom-table tr:hover { background-color: rgba(255, 255, 255, 0.6); }
-
     .table-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid #fff; box-shadow: 0 1px 1px rgba(0,0,0,0.1); display: inline-block; }
-
-    /* --- Layout --- */
+    
     .glass-card { 
         background: rgba(255, 255, 255, 0.85); 
         backdrop-filter: blur(8px); 
@@ -116,7 +110,6 @@
     .scrollbar-pink::-webkit-scrollbar { width: 4px; height: 4px; }
     .scrollbar-pink::-webkit-scrollbar-thumb { background: #f472b6; border-radius: 10px; }
     
-    /* Loading Overlay */
     #loading-overlay {
       position: absolute; inset: 0; background: rgba(255,255,255,0.6); 
       display: flex; align-items: center; justify-content: center; z-index: 50;
@@ -236,262 +229,7 @@
     </div>
   </div>
 
-  <script>
-    /* --- LINK CONNECT GOOGLE SHEET --- */
-    const API_URL = "https://script.google.com/macros/s/AKfycbxIrAI31xYNrCboyNNoOBDxA1k3n7WZzKn9Hg-sYLmReAZ7K58MTbIVaHi-xFRhL2oE/exec";
-    
-    /* --- Configuration --- */
-    const COLORS = ['#ef4444', '#f97316', '#f59e0b', '#84cc16', '#10b981', '#06b6d4', '#3b82f6', '#8b5cf6', '#d946ef', '#f43f5e', '#1f2937', '#ffffff'];
-    let orders = [];
-    let state = { fColors: [], bColors: [] };
-    let pendingDelete = null;
+  <script src="script.js"></script>
 
-    /* --- Init --- */
-    function init() {
-      createFallingFlowers();
-      document.getElementById('order-date').valueAsDate = new Date();
-      renderPicker('flower', COLORS);
-      renderPicker('bouquet', COLORS);
-      
-      document.getElementById('add-order-btn').onclick = handleAdd;
-      document.getElementById('cancel-delete-btn').onclick = () => toggleModal(false);
-      document.getElementById('confirm-delete-btn').onclick = handleDelete;
-      
-      // Load Initial Data
-      fetchOrders();
-    }
-
-    async function fetchOrders() {
-      showLoading(true);
-      showEmptyState("กำลังโหลดข้อมูล...");
-      try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        orders = data.map(d => ({
-            ...d, 
-            // แปลงค่า is_paid ให้เป็น boolean (บางที sheet ส่งมาเป็น TRUE/FALSE string)
-            is_paid: (d.is_paid === true || d.is_paid === 'TRUE' || d.is_paid === 'true')
-        }));
-        renderTable();
-      } catch (e) {
-        console.error(e);
-        showEmptyState("โหลดไม่สำเร็จ T_T<br>ลองรีเฟรชใหม่นะ");
-      }
-      showLoading(false);
-    }
-
-    function showLoading(show) {
-        const overlay = document.getElementById('loading-overlay');
-        if(show) overlay.classList.remove('hidden'); else overlay.classList.add('hidden');
-    }
-
-    function showEmptyState(msg) {
-        const emptyState = document.getElementById('empty-state');
-        const tableWrapper = document.getElementById('table-wrapper');
-        emptyState.querySelector('p').innerHTML = msg;
-        emptyState.classList.remove('hidden');
-        tableWrapper.classList.add('hidden');
-    }
-
-    function createFallingFlowers() {
-        const container = document.getElementById('falling-container');
-        const items = ['🌸', '🍃', '💮', '🌸', '✨'];
-        const count = 15;
-        for (let i = 0; i < count; i++) {
-            const el = document.createElement('div');
-            el.className = 'falling-item';
-            el.innerText = items[Math.floor(Math.random() * items.length)];
-            el.style.left = Math.random() * 100 + '%';
-            el.style.fontSize = (Math.random() * 15 + 15) + 'px';
-            el.style.animationDuration = (Math.random() * 5 + 5) + 's';
-            el.style.animationDelay = (Math.random() * 5) + 's';
-            container.appendChild(el);
-        }
-    }
-
-    function renderPicker(type, colors) {
-      const container = document.getElementById(`${type}-colors-picker`);
-      colors.forEach(c => {
-        const btn = document.createElement('div');
-        btn.className = 'color-btn';
-        btn.style.backgroundColor = c;
-        if(c==='#ffffff') btn.style.border = '1px solid #ddd';
-        btn.onclick = () => {
-          const list = state[`${type.charAt(0)}Colors`];
-          const idx = list.indexOf(c);
-          if (idx > -1) { list.splice(idx,1); btn.classList.remove('selected'); }
-          else { list.push(c); btn.classList.add('selected'); }
-        };
-        container.appendChild(btn);
-      });
-    }
-
-    async function handleAdd() {
-      const form = {
-        name: document.getElementById('customer-name').value,
-        queue: document.getElementById('queue-number').value,
-        count: document.getElementById('flower-count').value,
-        date: document.getElementById('order-date').value,
-        price: document.getElementById('price').value,
-        notes: document.getElementById('notes').value
-      };
-
-      if (!form.name || !form.price) { alert('⚠️ ใส่ชื่อกับราคาหน่อยน้า'); return; }
-
-      const btn = document.getElementById('add-order-btn');
-      const originalText = btn.innerText;
-      btn.innerText = '⏳ กำลังส่งข้อมูล...';
-      btn.disabled = true;
-      
-      const payload = {
-        id: 'id_' + Date.now(),
-        customer_name: form.name,
-        queue_number: parseInt(form.queue) || 0,
-        flower_count: parseInt(form.count) || 1,
-        order_date: form.date,
-        price: parseFloat(form.price),
-        notes: form.notes,
-        flower_colors: state.fColors.join(','),
-        bouquet_colors: state.bColors.join(','),
-        is_paid: false
-      };
-
-      // Optimistic UI: เพิ่มลงตารางก่อนเลยเพื่อให้รู้สึกลื่น
-      orders.push(payload);
-      renderTable();
-      resetForm();
-
-      try {
-        await fetch(API_URL + "?action=create", {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        });
-      } catch (e) {
-        alert("บันทึกไม่สำเร็จ! เช็คเน็ตหน่อยนะ");
-        // ถ้าพัง ลบออกจาก array
-        orders = orders.filter(o => o.id !== payload.id);
-        renderTable();
-      }
-
-      btn.innerHTML = '<span>✨ บันทึกออเดอร์ ✨</span>';
-      btn.disabled = false;
-    }
-
-    function resetForm() {
-      document.getElementById('customer-name').value = '';
-      document.getElementById('price').value = '';
-      document.getElementById('flower-count').value = '';
-      document.getElementById('notes').value = '';
-      document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
-      state.fColors = []; state.bColors = [];
-    }
-
-    window.togglePaid = async (id, isPaid) => {
-        const orderIndex = orders.findIndex(o => o.id === id);
-        if (orderIndex > -1) {
-            // Optimistic UI
-            orders[orderIndex].is_paid = isPaid;
-            renderTable();
-            
-            try {
-                await fetch(API_URL + "?action=update", {
-                    method: 'POST',
-                    body: JSON.stringify({id: id, is_paid: isPaid})
-                });
-            } catch(e) {
-                console.error("Update failed", e);
-                // Revert if failed (optional)
-            }
-        }
-    };
-
-    function renderTable() {
-      const tbody = document.getElementById('orders-list-body');
-      const emptyState = document.getElementById('empty-state');
-      const tableWrapper = document.getElementById('table-wrapper');
-      
-      if (orders.length === 0) {
-        showEmptyState("ยังไม่มีออเดอร์จ้า<br>รอรับลูกค้าคนแรกอยู่น้า...");
-        document.getElementById('order-count').innerText = 0;
-        document.getElementById('total-revenue').innerText = '฿0';
-        return;
-      } else {
-        emptyState.classList.add('hidden');
-        tableWrapper.classList.remove('hidden');
-      }
-
-      const sorted = [...orders].sort((a,b) => (a.queue_number||0) - (b.queue_number||0));
-      document.getElementById('order-count').innerText = orders.length;
-      document.getElementById('total-revenue').innerText = '฿' + orders.reduce((s,o)=>s+(o.price||0),0).toLocaleString();
-
-      tbody.innerHTML = '';
-      sorted.forEach(o => {
-        const tr = document.createElement('tr');
-        tr.className = 'pop-row'; 
-        
-        // สร้าง HTML สี
-        let colorDisplay = '';
-        if (o.flower_colors && o.flower_colors.length > 0) 
-            colorDisplay += `<div class="flex items-center gap-1 mb-1"><span class="text-[9px] bg-pink-100 text-pink-600 px-1 rounded w-6 text-center">ดอก</span><div class="flex -space-x-1 ml-1">${renderDots(o.flower_colors)}</div></div>`;
-        if (o.bouquet_colors && o.bouquet_colors.length > 0) 
-            colorDisplay += `<div class="flex items-center gap-1"><span class="text-[9px] bg-purple-100 text-purple-600 px-1 rounded w-6 text-center">ช่อ</span><div class="flex -space-x-1 ml-1">${renderDots(o.bouquet_colors)}</div></div>`;
-        if (!colorDisplay) colorDisplay = '<span class="text-gray-300 text-[10px]">- ไม่ระบุ -</span>';
-
-        const statusColor = o.is_paid ? 'text-green-600' : 'text-red-500';
-
-        tr.innerHTML = `
-          <td class="text-center">
-            <span class="bg-gray-100 text-gray-600 font-bold px-2 py-0.5 rounded-md text-xs border border-gray-200">${o.queue_number}</span>
-          </td>
-          <td class="font-medium text-gray-700 relative">
-            ${o.customer_name}
-            ${o.notes ? `<div class="text-[10px] text-gray-400 mt-0.5 bg-yellow-50 px-1 rounded inline-block border border-yellow-100">📝 ${o.notes}</div>` : ''}
-          </td>
-          <td class="text-center text-sm font-semibold text-gray-600">${o.flower_count}</td>
-          <td>${colorDisplay}</td>
-          <td class="text-right">
-             <div class="font-bold ${statusColor} text-sm">฿${o.price}</div>
-          </td>
-          <td class="text-center align-middle">
-             <label class="tgl-wrap">
-                <input type="checkbox" class="tgl-inp" ${o.is_paid ? 'checked' : ''} onchange="togglePaid('${o.id}', this.checked)">
-                <div class="tgl-bg"><div class="tgl-ball"></div></div>
-             </label>
-          </td>
-          <td class="text-center align-middle">
-             <button onclick="askDelete('${o.id}')" class="text-gray-300 hover:text-red-500 transition-colors font-bold text-lg px-2">×</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function renderDots(str) {
-      if(!str) return '';
-      return str.split(',').map(c => `<div class="table-dot" style="background:${c}"></div>`).join(' ');
-    }
-
-    window.askDelete = (id) => { pendingDelete = orders.find(o => o.id === id); toggleModal(true); };
-    window.handleDelete = async () => {
-      if(pendingDelete) {
-        const idToDelete = pendingDelete.id;
-        
-        // Optimistic UI
-        orders = orders.filter(o => o.id !== idToDelete);
-        renderTable();
-        toggleModal(false);
-
-        try {
-            await fetch(API_URL + "?action=delete&id=" + idToDelete);
-        } catch(e) {
-            alert("ลบไม่สำเร็จ เช็คเน็ตหน่อย");
-        }
-      }
-    };
-
-    function toggleModal(show) { const el = document.getElementById('delete-modal'); if(show) el.classList.remove('hidden'); else el.classList.add('hidden'); }
-
-    init();
-  </script>
  </body>
 </html>
