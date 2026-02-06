@@ -17,7 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&amp;family=Prompt:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
   
   <style>
-    /* CSS เดิมทั้งหมด */
+    /* CSS พื้นฐาน */
     body { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; overflow: hidden; }
     * { font-family: 'Kanit', 'Prompt', sans-serif; }
     #falling-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; background: linear-gradient(180deg, #fff0f5 0%, #ffe4e6 100%); }
@@ -45,8 +45,8 @@
     .tgl-inp:checked + .tgl-bg { background-color: #10b981; }
     .tgl-inp:checked + .tgl-bg .tgl-ball { left: 18px; }
 
-    /* สีฟ้าสำหรับ "เสร็จแล้ว" (คลาสพิเศษ) */
-    .finish-toggle .tgl-inp:checked + .tgl-bg { background-color: #3b82f6; } /* สีฟ้า */
+    /* สีฟ้าสำหรับ "เสร็จแล้ว" */
+    .finish-toggle .tgl-inp:checked + .tgl-bg { background-color: #3b82f6; } 
     
     .addon-checkbox:checked + div { background-color: #fce7f3; border-color: #ec4899; color: #be185d; }
     .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); }
@@ -150,16 +150,17 @@
      </div>
 
      <div id="table-wrapper" class="overflow-auto scrollbar-pink flex-1 hidden">
-       <table class="custom-table w-full min-w-[650px]">
+       <table class="custom-table w-full min-w-[700px]">
          <thead class="sticky top-0 z-20">
            <tr>
-             <th class="w-[8%] text-center">คิว</th>
-             <th class="w-[25%]">ชื่อลูกค้า</th>
+             <th class="w-[8%] text-center">วันที่</th>
+             <th class="w-[6%] text-center">คิว</th>
+             <th class="w-[20%]">ชื่อลูกค้า</th>
              <th class="w-[8%] text-center">จำนวน</th>
-             <th class="w-[18%]">สี</th> 
-             <th class="w-[12%] text-right">ราคา</th>
-             <th class="w-[10%] text-center">เสร็จ?</th>
-             <th class="w-[10%] text-center">จ่าย?</th>
+             <th class="w-[15%]">สี</th> 
+             <th class="w-[10%] text-right">ราคา</th>
+             <th class="w-[8%] text-center">เสร็จ?</th>
+             <th class="w-[8%] text-center">จ่าย?</th>
              <th class="w-[5%] text-center"></th>
            </tr>
          </thead>
@@ -171,8 +172,7 @@
 
   <script>
     // -----------------------------------------------------------------------
-    // ⚠️ อย่าลืม Deploy Script ใหม่อย่างถูกต้อง (New Deployment) ⚠️
-    // แล้วเอา URL มาใส่ตรงนี้ครับ
+    // ⚠️ ใส่ URL เดิมของคุณตรงนี้ได้เลย (ถ้า Deploy แบบ New deployment แล้ว URL จะใช้ได้เหมือนเดิม)
     // -----------------------------------------------------------------------
     const API_URL = "https://script.google.com/macros/s/AKfycbykNWYj-Bdit4PnqxRdOGHULxrxxNmO9G1p6lDz4wkSgQH3xiXPhqKA5zJxgLWHuN8zdQ/exec";
     // -----------------------------------------------------------------------
@@ -250,7 +250,7 @@
             flower_colors: state.fColors.map(c => COLOR_MAP[c] || c).join(', '),
             bouquet_colors: state.bColors.map(c => COLOR_MAP[c] || c).join(', '),
             is_paid: false,
-            finish_or_not: 'not finish' // ค่าเริ่มต้น
+            finish_or_not: 'not finish'
         };
 
         orders.push(newItem); 
@@ -272,7 +272,6 @@
         fetch(API_URL + "?action=delete&id=" + id, { method: 'POST', mode: 'no-cors' });
     }
 
-    // ฟังก์ชันอัปเดตสถานะการเงิน
     function togglePaid(id, isPaid) {
         const item = orders.find(o => o.id == id);
         if (item) item.is_paid = isPaid;
@@ -281,14 +280,12 @@
         });
     }
 
-    // ✅ ฟังก์ชันอัปเดตสถานะเสร็จงาน (ใหม่)
+    // ฟังก์ชันบันทึก "เสร็จงาน"
     function toggleFinish(id, isChecked) {
         const item = orders.find(o => o.id == id);
-        // แปลง true/false เป็นข้อความ finish/not finish
         const statusText = isChecked ? 'finish' : 'not finish';
         if (item) item.finish_or_not = statusText;
         
-        // ส่งค่าไปอัปเดตที่ Google Sheets
         fetch(API_URL + "?action=update", {
             method: 'POST', mode: 'no-cors', 
             body: JSON.stringify({ id: id, finish_or_not: statusText })
@@ -308,11 +305,18 @@
             
             const fDots = getDots(order.flower_colors);
             const bDots = getDots(order.bouquet_colors);
-            
-            // ตรวจสอบค่าสถานะเสร็จงาน
             const isFinished = (order.finish_or_not === 'finish');
+            
+            // แปลงวันที่
+            let dateDisplay = "-";
+            if(order.order_date) {
+                const d = new Date(order.order_date);
+                if(!isNaN(d)) dateDisplay = d.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' });
+                else dateDisplay = order.order_date;
+            }
 
             tr.innerHTML = `
+                <td class="text-center text-xs font-bold text-gray-500">${dateDisplay}</td>
                 <td class="text-center font-bold text-pink-600">${order.queue_number}</td>
                 <td>
                     <div class="font-bold text-gray-700 text-sm">${order.customer_name}</div>
