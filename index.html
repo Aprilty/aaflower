@@ -35,17 +35,16 @@
     .input-field { width: 100%; height: 38px !important; padding: 0 10px; border: 1px solid #fbcfe8; border-radius: 8px; font-size: 14px; background-color: #ffffff; transition: all 0.2s; -webkit-appearance: none; }
     .input-field:focus { border-color: #ec4899; box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.15); outline: none; }
     
+    /* สไตล์สำหรับช่องราคาที่แก้ไม่ได้ (Readonly) */
+    .input-readonly { background-color: #f3f4f6; color: #6b7280; border-color: #e5e7eb; pointer-events: none; font-weight: bold; }
+
     /* Toggle Switch Style */
     .tgl-wrap { position: relative; display: inline-block; width: 34px; height: 18px; }
     .tgl-inp { display: none; }
     .tgl-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #e5e7eb; border-radius: 20px; transition: 0.3s; box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; }
     .tgl-ball { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background-color: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2); pointer-events: none; }
-    
-    /* สีเขียวสำหรับ "จ่ายแล้ว" */
     .tgl-inp:checked + .tgl-bg { background-color: #10b981; }
     .tgl-inp:checked + .tgl-bg .tgl-ball { left: 18px; }
-
-    /* สีฟ้าสำหรับ "เสร็จแล้ว" */
     .finish-toggle .tgl-inp:checked + .tgl-bg { background-color: #3b82f6; } 
     
     .addon-checkbox:checked + div { background-color: #fce7f3; border-color: #ec4899; color: #be185d; }
@@ -86,15 +85,15 @@
     <div class="grid grid-cols-12 gap-2 mb-2">
       <div class="col-span-3 input-group">
         <label>จำนวน</label> 
-        <input type="number" id="flower-count" class="input-field text-center" placeholder="1" value="1" inputmode="numeric">
+        <input type="number" id="flower-count" class="input-field text-center" placeholder="1" value="1" inputmode="numeric" oninput="calculatePrice()">
       </div>
       <div class="col-span-5 input-group">
         <label>วันที่รับ *</label> 
         <input type="date" id="order-date" class="input-field text-center text-xs">
       </div>
       <div class="col-span-4 input-group">
-        <label>ราคา (฿)</label> 
-        <input type="number" id="price" class="input-field text-right" placeholder="0" inputmode="numeric">
+        <label>ราคา (ออโต้)</label> 
+        <input type="number" id="price" class="input-field text-right input-readonly" placeholder="0" readonly>
       </div>
     </div>
 
@@ -172,7 +171,7 @@
 
   <script>
     // -----------------------------------------------------------------------
-    // ⚠️ ใส่ URL เดิมของคุณตรงนี้ได้เลย (ถ้า Deploy แบบ New deployment แล้ว URL จะใช้ได้เหมือนเดิม)
+    // ⚠️ ใส่ URL ของ Apps Script เดิมของคุณตรงนี้
     // -----------------------------------------------------------------------
     const API_URL = "https://script.google.com/macros/s/AKfycbykNWYj-Bdit4PnqxRdOGHULxrxxNmO9G1p6lDz4wkSgQH3xiXPhqKA5zJxgLWHuN8zdQ/exec";
     // -----------------------------------------------------------------------
@@ -184,6 +183,18 @@
     let state = { fColors: [], bColors: [] };
     let orders = [];
 
+    // 🔥 ตารางราคา (ตามรูปภาพ)
+    const PRICE_TIERS = [
+        {n: 30, p: 639},
+        {n: 20, p: 439},
+        {n: 14, p: 339},
+        {n: 10, p: 269},
+        {n: 7, p: 199},
+        {n: 5, p: 159},
+        {n: 3, p: 109},
+        {n: 1, p: 59}
+    ];
+
     window.onload = function() {
         createFallingFlowers();
         renderColorPickers();
@@ -194,8 +205,46 @@
             setTimeout(() => document.getElementById('refresh-btn').classList.remove('spin-anim'), 800);
             fetchData();
         };
+        
+        // คำนวณราคาเริ่มต้นทันทีที่เปิดเว็บ
+        calculatePrice();
+        
         fetchData();
     };
+
+    // 🔥 ฟังก์ชันคำนวณราคาอัตโนมัติ (ใหม่!)
+    function calculatePrice() {
+        const countInput = document.getElementById('flower-count');
+        const priceInput = document.getElementById('price');
+        
+        let count = parseInt(countInput.value);
+        if (isNaN(count) || count < 0) count = 0;
+
+        let finalPrice = 0;
+
+        if (count > 0) {
+            // หาเรทราคาที่เหมาะสมที่สุด (เรทที่น้อยกว่าหรือเท่ากับจำนวนดอกไม้ที่กรอก)
+            let baseTier = null;
+            for (let tier of PRICE_TIERS) {
+                if (count >= tier.n) {
+                    baseTier = tier;
+                    break;
+                }
+            }
+
+            if (baseTier) {
+                // สูตร: ราคาฐาน + (ส่วนต่างดอกไม้ * 30 บาท)
+                // เช่น 4 ดอก: ฐานคือ 3 ดอก(109บ.) ส่วนต่างคือ 1 ดอก -> 109 + (1*30) = 139
+                const diff = count - baseTier.n;
+                finalPrice = baseTier.p + (diff * 30);
+            } else {
+                // กรณีพิเศษ: ถ้าต่ำกว่า 1 ดอก (เช่น 0) ก็ 0 บาท (แต่โค้ดนี้กันไว้ที่ tier 1 แล้ว)
+                 finalPrice = 0; 
+            }
+        }
+        
+        priceInput.value = finalPrice;
+    }
 
     async function fetchData() {
         const loader = document.getElementById('loading-overlay');
@@ -220,7 +269,7 @@
 
     function handleAdd() {
         const name = document.getElementById('customer-name').value;
-        const price = document.getElementById('price').value;
+        const price = document.getElementById('price').value; // อ่านค่าราคาจากช่องที่คำนวณแล้ว
         const dateVal = document.getElementById('order-date').value;
         if (!name) { alert('⚠️ ใส่ชื่อลูกค้าก่อนนะ'); return; }
         
@@ -280,12 +329,10 @@
         });
     }
 
-    // ฟังก์ชันบันทึก "เสร็จงาน"
     function toggleFinish(id, isChecked) {
         const item = orders.find(o => o.id == id);
         const statusText = isChecked ? 'finish' : 'not finish';
         if (item) item.finish_or_not = statusText;
-        
         fetch(API_URL + "?action=update", {
             method: 'POST', mode: 'no-cors', 
             body: JSON.stringify({ id: id, finish_or_not: statusText })
@@ -307,7 +354,6 @@
             const bDots = getDots(order.bouquet_colors);
             const isFinished = (order.finish_or_not === 'finish');
             
-            // แปลงวันที่
             let dateDisplay = "-";
             if(order.order_date) {
                 const d = new Date(order.order_date);
@@ -334,7 +380,6 @@
                     </div>
                 </td>
                 <td class="text-right font-bold text-gray-600">${Number(order.price).toLocaleString()}</td>
-                
                 <td class="text-center">
                     <label class="tgl-wrap finish-toggle">
                         <input type="checkbox" class="tgl-inp" 
@@ -343,7 +388,6 @@
                         <span class="tgl-bg"><span class="tgl-ball"></span></span>
                     </label>
                 </td>
-
                 <td class="text-center">
                     <label class="tgl-wrap">
                         <input type="checkbox" class="tgl-inp" 
@@ -352,7 +396,6 @@
                         <span class="tgl-bg"><span class="tgl-ball"></span></span>
                     </label>
                 </td>
-
                 <td class="text-center">
                     <button onclick="handleDelete('${order.id}')" class="text-red-300 hover:text-red-500 text-lg transition-colors">×</button>
                 </td>
@@ -376,7 +419,8 @@
 
     function resetForm() {
         document.getElementById('customer-name').value = '';
-        document.getElementById('price').value = '';
+        document.getElementById('flower-count').value = '1'; // รีเซ็ตจำนวน
+        calculatePrice(); // รีเซ็ตราคาตาม
         document.getElementById('notes').value = '';
         document.getElementById('addon-crown').checked = false;
         document.getElementById('addon-butterfly').checked = false;
