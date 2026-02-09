@@ -26,13 +26,13 @@
     .pop-row { animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     @keyframes pop-in { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
     
-    /* Input Styles */
-    .input-field { width: 100%; height: 38px; padding: 0 8px; border: 1px solid #fbcfe8; border-radius: 8px; font-size: 14px; background: white; color: #374151; }
-    .input-field:focus { border-color: #ec4899; outline: none; box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.15); }
-    .input-readonly { background: #f3f4f6; color: #6b7280; pointer-events: none; font-weight: bold; }
+    /* Input Styles - ปรับให้สูงขึ้นนิดนึง จิ้มง่าย */
+    .input-field { width: 100%; height: 42px; padding: 0 12px; border: 1px solid #fbcfe8; border-radius: 10px; font-size: 15px; background: white; color: #374151; transition: all 0.2s; }
+    .input-field:focus { border-color: #ec4899; outline: none; box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15); }
+    .input-readonly { background: #f9fafb; color: #6b7280; pointer-events: none; font-weight: bold; }
     
     /* Checkbox & Toggle Styles */
-    .addon-checkbox:checked + div { background-color: #fce7f3; border-color: #ec4899; color: #be185d; }
+    .addon-checkbox:checked + div { background-color: #fce7f3; border-color: #ec4899; color: #be185d; box-shadow: 0 2px 4px rgba(236, 72, 153, 0.1); }
     .tgl-wrap { position: relative; display: inline-block; width: 34px; height: 18px; }
     .tgl-inp { display: none; }
     .tgl-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #e5e7eb; border-radius: 20px; transition: 0.3s; }
@@ -41,112 +41,115 @@
     .tgl-inp:checked + .tgl-bg .tgl-ball { left: 18px; }
     .finish-toggle .tgl-inp:checked + .tgl-bg { background: #3b82f6; } 
 
-    .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); }
-    .color-btn { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .color-btn.selected { border-color: #ec4899; transform: scale(1.2); ring: 2px solid #ec4899; }
+    .glass-card { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 8px 32px rgba(236, 72, 153, 0.1); }
+    .color-btn { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .color-btn.selected { border-color: #ec4899; transform: scale(1.15); ring: 2px solid #ec4899; }
     
-    .custom-table th { background: rgba(255, 255, 255, 0.95); color: #be185d; font-size: 11px; padding: 10px 4px; text-align: left; border-bottom: 2px solid #fbcfe8; white-space: nowrap; }
-    .custom-table td { padding: 8px 4px; border-bottom: 1px solid #fff0f5; font-size: 13px; color: #374151; vertical-align: middle; }
+    .custom-table th { background: rgba(255, 255, 255, 0.95); color: #be185d; font-size: 12px; padding: 12px 6px; text-align: left; border-bottom: 2px solid #fbcfe8; white-space: nowrap; }
+    .custom-table td { padding: 10px 6px; border-bottom: 1px solid #fff0f5; font-size: 14px; color: #374151; vertical-align: middle; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
+    
+    label { font-size: 13px !important; margin-bottom: 4px !important; color: #db2777 !important; }
   </style>
  </head>
- <body class="h-full">
+ <body class="h-full text-gray-700">
   <div id="falling-container"></div>
 
-  <div id="app" class="h-full w-full p-2 pb-0 max-w-md mx-auto relative flex flex-col">
+  <div id="app" class="h-full w-full p-4 pb-0 max-w-md mx-auto relative flex flex-col">
    
-   <header class="text-center mb-2 mt-1 shrink-0">
-     <h1 class="text-xl font-extrabold text-pink-600 tracking-wide cute-wiggle">🌸 AAFLOWERSHOP</h1>
+   <header class="text-center mb-3 mt-2 shrink-0">
+     <h1 class="text-2xl font-extrabold text-pink-600 tracking-wide cute-wiggle drop-shadow-sm">🌸 AAFLOWERSHOP</h1>
    </header>
 
-   <div class="glass-card rounded-2xl p-3 border-pink-100 border mb-2 shrink-0 relative z-10">
+   <div class="glass-card rounded-2xl p-4 border-pink-100 border mb-3 shrink-0 relative z-10">
     
-    <div class="grid grid-cols-12 gap-2 mb-2">
-      <div class="col-span-7"> <label class="block text-pink-700 font-bold text-[11px] mb-0.5 ml-1">ชื่อลูกค้า *</label> 
-        <input type="text" id="customer-name" class="input-field" placeholder="ชื่อลูกค้า">
+    <div class="mb-3">
+        <label class="block font-bold ml-1">ชื่อลูกค้า *</label> 
+        <input type="text" id="customer-name" class="input-field" placeholder="ระบุชื่อลูกค้า...">
+    </div>
+
+    <div class="mb-3">
+        <label class="block font-bold ml-1">วันที่รับ *</label> 
+        <input type="date" id="order-date" class="input-field px-3">
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 mb-3">
+      <div>
+        <label class="block font-bold ml-1 text-center">จำนวนดอก</label> 
+        <input type="number" id="flower-count" class="input-field text-center font-bold text-lg" placeholder="1" value="1" inputmode="numeric" oninput="calculatePrice()">
       </div>
-      <div class="col-span-5"> <label class="block text-pink-700 font-bold text-[11px] mb-0.5 ml-1">วันที่รับ *</label> 
-        <input type="date" id="order-date" class="input-field text-xs px-1">
+      <div>
+        <label class="block font-bold ml-1 text-center">ราคา (ออโต้)</label> 
+        <input type="number" id="price" class="input-field text-center input-readonly text-pink-600 font-bold text-lg" placeholder="0" readonly>
       </div>
     </div>
 
-    <div class="grid grid-cols-12 gap-2 mb-2">
-      <div class="col-span-5">
-        <label class="block text-pink-700 font-bold text-[11px] mb-0.5 ml-1">จำนวนดอก</label> 
-        <input type="number" id="flower-count" class="input-field text-center" placeholder="1" value="1" inputmode="numeric" oninput="calculatePrice()">
-      </div>
-      <div class="col-span-7">
-        <label class="block text-pink-700 font-bold text-[11px] mb-0.5 ml-1">ราคา (ออโต้)</label> 
-        <input type="number" id="price" class="input-field text-right input-readonly" placeholder="0" readonly>
-      </div>
-    </div>
-
-    <div class="flex gap-2 mb-2">
-        <label class="flex-1 cursor-pointer">
+    <div class="grid grid-cols-2 gap-3 mb-3">
+        <label class="cursor-pointer h-full">
             <input type="checkbox" id="addon-crown" class="addon-checkbox hidden" onchange="calculatePrice()">
-            <div class="border border-pink-200 rounded-lg py-1.5 px-2 text-center text-xs text-gray-500 font-bold transition-colors">👑 มงกุฎ (+15)</div>
+            <div class="border border-pink-200 rounded-xl py-2 px-2 text-center text-sm text-gray-500 font-bold transition-all h-full flex items-center justify-center bg-white">👑 มงกุฎ (+15)</div>
         </label>
-        <label class="flex-1 cursor-pointer">
+        <label class="cursor-pointer h-full">
             <input type="checkbox" id="addon-butterfly" class="addon-checkbox hidden" onchange="calculatePrice()">
-            <div class="border border-pink-200 rounded-lg py-1.5 px-2 text-center text-xs text-gray-500 font-bold transition-colors">🦋 ผีเสื้อ (+10)</div>
+            <div class="border border-pink-200 rounded-xl py-2 px-2 text-center text-sm text-gray-500 font-bold transition-all h-full flex items-center justify-center bg-white">🦋 ผีเสื้อ (+10)</div>
         </label>
     </div>
 
-    <div class="mb-2">
-       <input type="text" id="notes" class="input-field" style="background-color: #fff1f2;" placeholder="📝 หมายเหตุ (พิมพ์ 'ก่อน' เพื่อแซงคิว)">
+    <div class="mb-3">
+       <input type="text" id="notes" class="input-field bg-pink-50" style="background-color: #fff1f2;" placeholder="📝 หมายเหตุ (พิมพ์ 'ก่อน' เพื่อแซงคิว)">
     </div>
     
-    <div class="border-t border-pink-100 my-2"></div>
+    <div class="border-t border-pink-100 my-3"></div>
     
-    <div class="space-y-2">
-      <div class="flex items-center gap-2">
-        <span class="text-[11px] font-bold text-pink-500 w-8 shrink-0">ดอก</span>
-        <div id="flower-colors-picker" class="flex gap-1.5 overflow-x-auto hide-scrollbar flex-1 py-1 px-1"></div>
+    <div class="space-y-3">
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-bold text-pink-500 w-8 shrink-0">ดอก</span>
+        <div id="flower-colors-picker" class="flex gap-2 overflow-x-auto hide-scrollbar flex-1 py-1 px-1"></div>
       </div>
-      <div class="flex items-center gap-2">
-        <span class="text-[11px] font-bold text-purple-500 w-8 shrink-0">ช่อ</span>
-        <div id="bouquet-colors-picker" class="flex gap-1.5 overflow-x-auto hide-scrollbar flex-1 py-1 px-1"></div>
+      <div class="flex items-center gap-3">
+        <span class="text-xs font-bold text-purple-500 w-8 shrink-0">ช่อ</span>
+        <div id="bouquet-colors-picker" class="flex gap-2 overflow-x-auto hide-scrollbar flex-1 py-1 px-1"></div>
       </div>
     </div>
 
-    <button id="add-order-btn" class="mt-2 w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white py-2 rounded-xl font-bold shadow-lg shadow-pink-200 active:scale-95 transition-all flex justify-center items-center gap-2 text-sm">
+    <button id="add-order-btn" class="mt-4 w-full bg-gradient-to-r from-pink-500 to-rose-400 text-white py-3 rounded-xl font-bold shadow-lg shadow-pink-200 active:scale-95 transition-all flex justify-center items-center gap-2 text-base">
       <span>✨ บันทึกออเดอร์ ✨</span>
     </button>
    </div>
 
    <div class="glass-card rounded-xl overflow-hidden border border-pink-100 shadow-md flex-1 flex flex-col min-h-0 mb-4 relative z-10">
      <div id="loading-overlay" class="hidden absolute inset-0 bg-white/60 flex items-center justify-center z-50 backdrop-blur-sm">
-       <div class="text-pink-500 font-bold text-xs animate-pulse">กำลังโหลด...</div>
+       <div class="text-pink-500 font-bold text-sm animate-pulse">กำลังโหลด...</div>
      </div>
 
-     <div class="bg-pink-50/80 p-2.5 flex justify-between items-center border-b border-pink-100 shrink-0">
+     <div class="bg-pink-50/80 p-3 flex justify-between items-center border-b border-pink-100 shrink-0">
        <div class="flex items-center gap-2">
            <h2 class="text-sm font-bold text-pink-700 flex items-center gap-2">
-             📋 รายการ <span id="order-count" class="bg-white text-pink-600 px-2 py-0.5 rounded-full text-xs shadow-sm">0</span>
+             📋 รายการ <span id="order-count" class="bg-white text-pink-600 px-2 py-0.5 rounded-full text-xs shadow-sm ring-1 ring-pink-100">0</span>
            </h2>
-           <button id="refresh-btn" onclick="fetchData()" class="bg-white text-pink-500 w-6 h-6 rounded-full shadow-sm flex items-center justify-center hover:bg-pink-100 active:scale-90 transition-all">🔄</button>
+           <button id="refresh-btn" onclick="fetchData()" class="bg-white text-pink-500 w-7 h-7 rounded-full shadow-sm flex items-center justify-center hover:bg-pink-100 active:scale-90 transition-all border border-pink-100">🔄</button>
        </div>
-       <div id="total-revenue" class="text-green-600 font-bold text-sm bg-white px-2 py-0.5 rounded-lg shadow-sm">฿0</div>
+       <div id="total-revenue" class="text-green-600 font-bold text-sm bg-white px-2 py-1 rounded-lg shadow-sm ring-1 ring-green-100">฿0</div>
      </div>
 
      <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center p-6 text-pink-300 hidden">
-        <div class="text-5xl mb-2 animate-bounce">🌷</div>
-        <p class="font-light text-sm">กำลังโหลดข้อมูล...</p>
+        <div class="text-6xl mb-2 animate-bounce">🌷</div>
+        <p class="font-medium text-sm text-pink-400">กำลังโหลดข้อมูล...</p>
      </div>
 
      <div id="table-wrapper" class="overflow-auto flex-1 hidden">
        <table class="custom-table w-full min-w-[700px]">
-         <thead class="sticky top-0 z-20">
+         <thead class="sticky top-0 z-20 shadow-sm">
            <tr>
-             <th class="w-[8%] text-center">วันที่</th>
-             <th class="w-[6%] text-center">คิว</th>
+             <th class="w-[10%] text-center">วันที่</th>
+             <th class="w-[8%] text-center">คิว</th>
              <th class="w-[20%]">ชื่อลูกค้า</th>
              <th class="w-[8%] text-center">จำนวน</th>
              <th class="w-[15%]">สี</th> 
-             <th class="w-[10%] text-right">ราคา</th>
+             <th class="w-[12%] text-right">ราคา</th>
              <th class="w-[8%] text-center">เสร็จ?</th>
              <th class="w-[8%] text-center">จ่าย?</th>
-             <th class="w-[5%] text-center"></th>
+             <th class="w-[6%] text-center"></th>
            </tr>
          </thead>
          <tbody id="orders-list-body"></tbody>
@@ -327,10 +330,10 @@
                 <td>
                     <div class="flex flex-col gap-1 text-[10px] text-gray-500">
                         <div class="flex items-center gap-1">
-                           <span class="text-pink-400 font-bold">ด:</span> <div class="flex gap-0.5 flex-wrap">${getDots(order.flower_colors)}</div>
+                           <span class="text-pink-400 font-bold">ด:</span> <div class="flex gap-1 flex-wrap">${getDots(order.flower_colors)}</div>
                         </div>
                         <div class="flex items-center gap-1">
-                           <span class="text-purple-400 font-bold">ช:</span> <div class="flex gap-0.5 flex-wrap">${getDots(order.bouquet_colors)}</div>
+                           <span class="text-purple-400 font-bold">ช:</span> <div class="flex gap-1 flex-wrap">${getDots(order.bouquet_colors)}</div>
                         </div>
                     </div>
                 </td>
@@ -348,7 +351,7 @@
                     </label>
                 </td>
                 <td class="text-center">
-                    <button onclick="handleDelete('${order.id}')" class="text-red-300 hover:text-red-500 text-lg">×</button>
+                    <button onclick="handleDelete('${order.id}')" class="text-red-300 hover:text-red-500 text-lg p-1">×</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -363,7 +366,7 @@
         for(let k in COLOR_MAP) reverseMap[COLOR_MAP[k]] = k;
         return colorString.split(', ').map(c => {
             const hex = reverseMap[c] || c; 
-            if(hex.startsWith('#')) return `<div class="w-2.5 h-2.5 rounded-full border border-gray-300 shadow-sm" style="background:${hex};" title="${c}"></div>`;
+            if(hex.startsWith('#')) return `<div class="w-3 h-3 rounded-full border border-gray-300 shadow-sm" style="background:${hex};" title="${c}"></div>`;
             return `<span>${c}</span>`;
         }).join('');
     }
