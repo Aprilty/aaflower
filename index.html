@@ -16,140 +16,148 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    /* CSS ตกแต่ง */
+    /* ตั้งค่าพื้นฐาน */
     body { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; overflow: hidden; font-family: 'Kanit', sans-serif; }
-    #falling-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; background: linear-gradient(180deg, #fff0f5 0%, #ffe4e6 100%); }
-    .falling-item { position: absolute; top: -10%; animation: fall linear infinite; opacity: 0.6; }
-    @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+    
+    /* 🌸 ดอกไม้ร่วง (แก้ให้เห็นชัดขึ้น) */
+    #falling-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: linear-gradient(180deg, #fff0f5 0%, #ffe4e6 100%); }
+    .falling-item { position: absolute; top: -10%; animation: fall linear infinite; opacity: 0.7; z-index: 0; }
+    @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 20% { opacity: 0.8; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+    
     .cute-wiggle { display: inline-block; animation: wiggle 2s ease-in-out infinite; }
     @keyframes wiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
-    .pop-row { animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-    @keyframes pop-in { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
+
+    /* Input Fields จัดระเบียบ */
+    .input-group-label { font-size: 13px; font-weight: 600; color: #db2777; margin-bottom: 4px; display: block; }
+    .input-field { width: 100%; height: 40px; padding: 0 12px; border: 1px solid #fbcfe8; border-radius: 12px; font-size: 14px; background: white; color: #374151; transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .input-field:focus { border-color: #ec4899; outline: none; box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2); }
+    .input-readonly { background: #fdf2f8; color: #be185d; pointer-events: none; font-weight: bold; border-color: transparent; }
+
+    /* การ์ดพื้นหลัง (ปรับให้ใสขึ้นเพื่อให้เห็นดอกไม้) */
+    .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(6px); border: 1px solid rgba(255, 255, 255, 0.9); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); border-radius: 20px; }
     
-    /* Input Styles - ปรับให้สูงขึ้นนิดนึง จิ้มง่าย */
-    .input-field { width: 100%; height: 42px; padding: 0 12px; border: 1px solid #fbcfe8; border-radius: 10px; font-size: 15px; background: white; color: #374151; transition: all 0.2s; }
-    .input-field:focus { border-color: #ec4899; outline: none; box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.15); }
-    .input-readonly { background: #f9fafb; color: #6b7280; pointer-events: none; font-weight: bold; }
-    
-    /* Checkbox & Toggle Styles */
-    .addon-checkbox:checked + div { background-color: #fce7f3; border-color: #ec4899; color: #be185d; box-shadow: 0 2px 4px rgba(236, 72, 153, 0.1); }
+    /* Checkbox สวยๆ */
+    .addon-card { position: relative; border: 1px solid #fbcfe8; background: white; border-radius: 12px; padding: 8px; text-align: center; transition: all 0.2s; cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #6b7280; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .addon-checkbox:checked + .addon-card { background-color: #fce7f3; border-color: #ec4899; color: #be185d; box-shadow: 0 2px 5px rgba(236, 72, 153, 0.2); transform: translateY(-1px); }
+
+    /* Toggle Switch */
     .tgl-wrap { position: relative; display: inline-block; width: 34px; height: 18px; }
     .tgl-inp { display: none; }
     .tgl-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #e5e7eb; border-radius: 20px; transition: 0.3s; }
-    .tgl-ball { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: white; border-radius: 50%; transition: 0.3s; }
+    .tgl-ball { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
     .tgl-inp:checked + .tgl-bg { background: #10b981; }
     .tgl-inp:checked + .tgl-bg .tgl-ball { left: 18px; }
     .finish-toggle .tgl-inp:checked + .tgl-bg { background: #3b82f6; } 
 
-    .glass-card { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 8px 32px rgba(236, 72, 153, 0.1); }
-    .color-btn { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .color-btn.selected { border-color: #ec4899; transform: scale(1.15); ring: 2px solid #ec4899; }
-    
-    .custom-table th { background: rgba(255, 255, 255, 0.95); color: #be185d; font-size: 12px; padding: 12px 6px; text-align: left; border-bottom: 2px solid #fbcfe8; white-space: nowrap; }
-    .custom-table td { padding: 10px 6px; border-bottom: 1px solid #fff0f5; font-size: 14px; color: #374151; vertical-align: middle; }
+    /* สี */
+    .color-btn { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.2s; }
+    .color-btn.selected { border-color: #ec4899; transform: scale(1.2); ring: 2px solid #ec4899; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     
-    label { font-size: 13px !important; margin-bottom: 4px !important; color: #db2777 !important; }
+    /* ตาราง */
+    .custom-table th { background: rgba(255,241,242, 0.9); color: #be185d; font-size: 12px; padding: 10px 4px; border-bottom: 2px solid #fbcfe8; }
+    .custom-table td { padding: 8px 4px; border-bottom: 1px solid #fff0f5; font-size: 13px; vertical-align: middle; }
   </style>
  </head>
- <body class="h-full text-gray-700">
+ <body class="h-full text-gray-700 relative">
+  
   <div id="falling-container"></div>
 
-  <div id="app" class="h-full w-full p-4 pb-0 max-w-md mx-auto relative flex flex-col">
+  <div id="app" class="h-full w-full p-4 pb-0 max-w-md mx-auto relative flex flex-col z-10">
    
-   <header class="text-center mb-3 mt-2 shrink-0">
-     <h1 class="text-2xl font-extrabold text-pink-600 tracking-wide cute-wiggle drop-shadow-sm">🌸 AAFLOWERSHOP</h1>
+   <header class="text-center mb-3 shrink-0">
+     <h1 class="text-2xl font-extrabold text-pink-600 tracking-wide cute-wiggle drop-shadow-sm" style="text-shadow: 2px 2px 0px #fff;">🌸 AAFLOWERSHOP</h1>
    </header>
 
-   <div class="glass-card rounded-2xl p-4 border-pink-100 border mb-3 shrink-0 relative z-10">
+   <div class="glass-card p-4 mb-3 shrink-0">
     
-    <div class="mb-3">
-        <label class="block font-bold ml-1">ชื่อลูกค้า *</label> 
+    <div class="mb-2">
+        <label class="input-group-label">ชื่อลูกค้า *</label> 
         <input type="text" id="customer-name" class="input-field" placeholder="ระบุชื่อลูกค้า...">
     </div>
 
-    <div class="mb-3">
-        <label class="block font-bold ml-1">วันที่รับ *</label> 
-        <input type="date" id="order-date" class="input-field px-3">
+    <div class="mb-2">
+        <label class="input-group-label">วันที่รับ *</label> 
+        <input type="date" id="order-date" class="input-field text-center">
     </div>
 
-    <div class="grid grid-cols-2 gap-3 mb-3">
+    <div class="grid grid-cols-2 gap-3 mb-2">
       <div>
-        <label class="block font-bold ml-1 text-center">จำนวนดอก</label> 
-        <input type="number" id="flower-count" class="input-field text-center font-bold text-lg" placeholder="1" value="1" inputmode="numeric" oninput="calculatePrice()">
+        <label class="input-group-label text-center">จำนวนดอก</label> 
+        <input type="number" id="flower-count" class="input-field text-center text-lg font-bold" placeholder="1" value="1" inputmode="numeric" oninput="calculatePrice()">
       </div>
       <div>
-        <label class="block font-bold ml-1 text-center">ราคา (ออโต้)</label> 
-        <input type="number" id="price" class="input-field text-center input-readonly text-pink-600 font-bold text-lg" placeholder="0" readonly>
+        <label class="input-group-label text-center">ราคา (฿)</label> 
+        <input type="number" id="price" class="input-field text-center text-lg font-bold input-readonly" placeholder="0" readonly>
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-3 mb-3">
-        <label class="cursor-pointer h-full">
+    <div class="grid grid-cols-2 gap-3 mb-2 h-10">
+        <label class="block h-full">
             <input type="checkbox" id="addon-crown" class="addon-checkbox hidden" onchange="calculatePrice()">
-            <div class="border border-pink-200 rounded-xl py-2 px-2 text-center text-sm text-gray-500 font-bold transition-all h-full flex items-center justify-center bg-white">👑 มงกุฎ (+15)</div>
+            <div class="addon-card">👑 มงกุฎ (+15)</div>
         </label>
-        <label class="cursor-pointer h-full">
+        <label class="block h-full">
             <input type="checkbox" id="addon-butterfly" class="addon-checkbox hidden" onchange="calculatePrice()">
-            <div class="border border-pink-200 rounded-xl py-2 px-2 text-center text-sm text-gray-500 font-bold transition-all h-full flex items-center justify-center bg-white">🦋 ผีเสื้อ (+10)</div>
+            <div class="addon-card">🦋 ผีเสื้อ (+10)</div>
         </label>
     </div>
 
     <div class="mb-3">
-       <input type="text" id="notes" class="input-field bg-pink-50" style="background-color: #fff1f2;" placeholder="📝 หมายเหตุ (พิมพ์ 'ก่อน' เพื่อแซงคิว)">
+       <input type="text" id="notes" class="input-field" style="background-color: #fff1f2; border-style: dashed;" placeholder="📝 หมายเหตุ (พิมพ์ 'ก่อน' เพื่อแซงคิว)">
     </div>
     
-    <div class="border-t border-pink-100 my-3"></div>
+    <div class="border-t border-pink-200/50 my-2"></div>
     
-    <div class="space-y-3">
-      <div class="flex items-center gap-3">
+    <div class="space-y-2">
+      <div class="flex items-center gap-2">
         <span class="text-xs font-bold text-pink-500 w-8 shrink-0">ดอก</span>
         <div id="flower-colors-picker" class="flex gap-2 overflow-x-auto hide-scrollbar flex-1 py-1 px-1"></div>
       </div>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
         <span class="text-xs font-bold text-purple-500 w-8 shrink-0">ช่อ</span>
         <div id="bouquet-colors-picker" class="flex gap-2 overflow-x-auto hide-scrollbar flex-1 py-1 px-1"></div>
       </div>
     </div>
 
-    <button id="add-order-btn" class="mt-4 w-full bg-gradient-to-r from-pink-500 to-rose-400 text-white py-3 rounded-xl font-bold shadow-lg shadow-pink-200 active:scale-95 transition-all flex justify-center items-center gap-2 text-base">
+    <button id="add-order-btn" class="mt-3 w-full bg-gradient-to-r from-pink-500 to-rose-400 text-white py-2.5 rounded-xl font-bold shadow-md shadow-pink-200 active:scale-95 transition-all text-sm flex justify-center items-center gap-2">
       <span>✨ บันทึกออเดอร์ ✨</span>
     </button>
    </div>
 
-   <div class="glass-card rounded-xl overflow-hidden border border-pink-100 shadow-md flex-1 flex flex-col min-h-0 mb-4 relative z-10">
+   <div class="glass-card flex-1 flex flex-col min-h-0 mb-4 overflow-hidden relative">
      <div id="loading-overlay" class="hidden absolute inset-0 bg-white/60 flex items-center justify-center z-50 backdrop-blur-sm">
        <div class="text-pink-500 font-bold text-sm animate-pulse">กำลังโหลด...</div>
      </div>
 
-     <div class="bg-pink-50/80 p-3 flex justify-between items-center border-b border-pink-100 shrink-0">
+     <div class="bg-pink-50/50 p-2 flex justify-between items-center border-b border-pink-100 shrink-0">
        <div class="flex items-center gap-2">
-           <h2 class="text-sm font-bold text-pink-700 flex items-center gap-2">
-             📋 รายการ <span id="order-count" class="bg-white text-pink-600 px-2 py-0.5 rounded-full text-xs shadow-sm ring-1 ring-pink-100">0</span>
+           <h2 class="text-sm font-bold text-pink-700 pl-2">
+             รายการ (<span id="order-count">0</span>)
            </h2>
-           <button id="refresh-btn" onclick="fetchData()" class="bg-white text-pink-500 w-7 h-7 rounded-full shadow-sm flex items-center justify-center hover:bg-pink-100 active:scale-90 transition-all border border-pink-100">🔄</button>
+           <button onclick="fetchData()" class="bg-white text-pink-500 w-6 h-6 rounded-full shadow-sm flex items-center justify-center hover:bg-pink-100 active:scale-90 transition-all border border-pink-100 text-xs">🔄</button>
        </div>
-       <div id="total-revenue" class="text-green-600 font-bold text-sm bg-white px-2 py-1 rounded-lg shadow-sm ring-1 ring-green-100">฿0</div>
+       <div id="total-revenue" class="text-green-600 font-bold text-sm bg-white px-2 py-0.5 rounded-lg shadow-sm border border-green-100 mr-2">฿0</div>
      </div>
 
      <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center p-6 text-pink-300 hidden">
-        <div class="text-6xl mb-2 animate-bounce">🌷</div>
-        <p class="font-medium text-sm text-pink-400">กำลังโหลดข้อมูล...</p>
+        <div class="text-5xl mb-2 animate-bounce">🌷</div>
+        <p class="font-medium text-xs text-pink-400">กำลังโหลด...</p>
      </div>
 
      <div id="table-wrapper" class="overflow-auto flex-1 hidden">
-       <table class="custom-table w-full min-w-[700px]">
+       <table class="custom-table w-full min-w-[600px]">
          <thead class="sticky top-0 z-20 shadow-sm">
            <tr>
-             <th class="w-[10%] text-center">วันที่</th>
+             <th class="w-[12%] text-center">วันที่</th>
              <th class="w-[8%] text-center">คิว</th>
              <th class="w-[20%]">ชื่อลูกค้า</th>
              <th class="w-[8%] text-center">จำนวน</th>
              <th class="w-[15%]">สี</th> 
              <th class="w-[12%] text-right">ราคา</th>
-             <th class="w-[8%] text-center">เสร็จ?</th>
-             <th class="w-[8%] text-center">จ่าย?</th>
-             <th class="w-[6%] text-center"></th>
+             <th class="w-[8%] text-center">เสร็จ</th>
+             <th class="w-[8%] text-center">จ่าย</th>
+             <th class="w-[5%] text-center"></th>
            </tr>
          </thead>
          <tbody id="orders-list-body"></tbody>
@@ -160,7 +168,7 @@
 
   <script>
     // -----------------------------------------------------------------------
-    // ⚠️ อย่าลืมใส่ URL Apps Script ของคุณตรงนี้นะครับ
+    // ⚠️ อย่าลืมใส่ URL Apps Script เดิมตรงนี้นะครับ
     const API_URL = "https://script.google.com/macros/s/AKfycbykNWYj-Bdit4PnqxRdOGHULxrxxNmO9G1p6lDz4wkSgQH3xiXPhqKA5zJxgLWHuN8zdQ/exec";
     // -----------------------------------------------------------------------
 
@@ -215,7 +223,7 @@
             console.error(err);
             loader.classList.add('hidden');
             empty.classList.remove('hidden');
-            document.querySelector('#empty-state p').innerText = "โหลดไม่ได้ ลองรีเฟรชใหม่";
+            document.querySelector('#empty-state p').innerText = "โหลดไม่ได้";
         }
     }
 
@@ -269,13 +277,13 @@
             }, 1000);
         }).catch(e => {
             console.error(e);
-            alert('มีปัญหาในการบันทึก');
+            alert('มีปัญหา');
             btn.disabled = false;
         });
     }
 
     function handleDelete(id) {
-        if(!confirm('ลบรายการนี้ใช่ไหม?')) return;
+        if(!confirm('ลบ?')) return;
         orders = orders.filter(o => o.id !== id);
         renderTable();
         fetch(API_URL + "?action=delete&id=" + id, { method: 'POST', mode: 'no-cors' });
@@ -306,7 +314,7 @@
         orders.forEach(order => {
             if (!order.is_paid) total += parseFloat(order.price) || 0;
             const tr = document.createElement('tr');
-            tr.className = 'pop-row hover:bg-white/50 transition-colors';
+            tr.className = 'hover:bg-white/50 transition-colors';
             
             const isFinished = (order.finish_or_not === 'finish');
             const isPriority = order.notes && order.notes.includes('ก่อน');
@@ -323,8 +331,8 @@
                 <td class="text-center text-xs font-bold text-gray-500">${dateDisplay}</td>
                 <td class="text-center ${queueStyle}">${order.queue_number}</td>
                 <td>
-                    <div class="font-bold text-gray-700 text-sm">${order.customer_name}</div>
-                    ${order.notes ? `<div class="text-[10px] text-pink-500 font-medium truncate max-w-[140px]">${order.notes}</div>` : ''}
+                    <div class="font-bold text-gray-700 text-sm truncate max-w-[100px]">${order.customer_name}</div>
+                    ${order.notes ? `<div class="text-[10px] text-pink-500 font-medium truncate max-w-[100px]">${order.notes}</div>` : ''}
                 </td>
                 <td class="text-center"><span class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-xs font-bold">${order.flower_count}</span></td>
                 <td>
@@ -337,21 +345,21 @@
                         </div>
                     </div>
                 </td>
-                <td class="text-right font-bold text-gray-600">${Number(order.price).toLocaleString()}</td>
+                <td class="text-right font-bold text-gray-600 text-xs">${Number(order.price).toLocaleString()}</td>
                 <td class="text-center">
-                    <label class="tgl-wrap finish-toggle">
+                    <label class="tgl-wrap finish-toggle scale-75 origin-center">
                         <input type="checkbox" class="tgl-inp" ${isFinished ? 'checked' : ''} onchange="toggleFinish('${order.id}', this.checked)">
                         <span class="tgl-bg"><span class="tgl-ball"></span></span>
                     </label>
                 </td>
                 <td class="text-center">
-                    <label class="tgl-wrap">
+                    <label class="tgl-wrap scale-75 origin-center">
                         <input type="checkbox" class="tgl-inp" ${order.is_paid ? 'checked' : ''} onchange="togglePaid('${order.id}', this.checked)">
                         <span class="tgl-bg"><span class="tgl-ball"></span></span>
                     </label>
                 </td>
                 <td class="text-center">
-                    <button onclick="handleDelete('${order.id}')" class="text-red-300 hover:text-red-500 text-lg p-1">×</button>
+                    <button onclick="handleDelete('${order.id}')" class="text-red-300 hover:text-red-500 text-base font-bold">×</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -366,7 +374,7 @@
         for(let k in COLOR_MAP) reverseMap[COLOR_MAP[k]] = k;
         return colorString.split(', ').map(c => {
             const hex = reverseMap[c] || c; 
-            if(hex.startsWith('#')) return `<div class="w-3 h-3 rounded-full border border-gray-300 shadow-sm" style="background:${hex};" title="${c}"></div>`;
+            if(hex.startsWith('#')) return `<div class="w-2.5 h-2.5 rounded-full border border-gray-300 shadow-sm" style="background:${hex};"></div>`;
             return `<span>${c}</span>`;
         }).join('');
     }
@@ -405,14 +413,14 @@
     function createFallingFlowers() {
         const container = document.getElementById('falling-container');
         const emojis = ['🌸', '🌹', '🌺', '🌻', '🌷', '💐'];
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 20; i++) {
             const el = document.createElement('div');
             el.className = 'falling-item';
             el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
             el.style.left = Math.random() * 100 + '%';
-            el.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            el.style.animationDuration = (Math.random() * 5 + 8) + 's';
             el.style.animationDelay = (Math.random() * 5) + 's';
-            el.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            el.style.fontSize = (Math.random() * 20 + 15) + 'px';
             container.appendChild(el);
         }
     }
