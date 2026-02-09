@@ -16,38 +16,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
   <style>
-    body { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; overflow: hidden; }
-    * { font-family: 'Kanit', sans-serif; }
+    /* CSS ตกแต่ง */
+    body { box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; overflow: hidden; font-family: 'Kanit', sans-serif; }
     #falling-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; background: linear-gradient(180deg, #fff0f5 0%, #ffe4e6 100%); }
     .falling-item { position: absolute; top: -10%; animation: fall linear infinite; opacity: 0.6; }
-    @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 10% { opacity: 0.7; } 50% { transform: translateY(50vh) rotate(180deg); } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
-    @keyframes wiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+    @keyframes fall { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
     .cute-wiggle { display: inline-block; animation: wiggle 2s ease-in-out infinite; }
+    @keyframes wiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
     .pop-row { animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
     @keyframes pop-in { 0% { opacity: 0; transform: translateY(-10px); } 100% { opacity: 1; transform: translateY(0); } }
-    .spin-anim { animation: spin-once 0.8s ease-in-out; }
-    @keyframes spin-once { 100% { transform: rotate(360deg); } }
-
-    .input-group label { display: block; color: #be185d; font-weight: 600; font-size: 11px; margin-bottom: 2px; }
-    .input-field { width: 100%; height: 38px !important; padding: 0 10px; border: 1px solid #fbcfe8; border-radius: 8px; font-size: 14px; background-color: white; }
+    
+    .input-field { width: 100%; height: 38px; padding: 0 10px; border: 1px solid #fbcfe8; border-radius: 8px; font-size: 14px; background: white; }
     .input-field:focus { border-color: #ec4899; outline: none; box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.15); }
-    .input-readonly { background-color: #f3f4f6; color: #6b7280; border-color: #e5e7eb; pointer-events: none; font-weight: bold; }
-
+    .input-readonly { background: #f3f4f6; color: #6b7280; pointer-events: none; font-weight: bold; }
+    
+    /* Checkbox & Toggle Styles */
+    .addon-checkbox:checked + div { background-color: #fce7f3; border-color: #ec4899; color: #be185d; }
     .tgl-wrap { position: relative; display: inline-block; width: 34px; height: 18px; }
     .tgl-inp { display: none; }
-    .tgl-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #e5e7eb; border-radius: 20px; transition: 0.3s; }
-    .tgl-ball { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background-color: white; border-radius: 50%; transition: 0.3s; pointer-events: none; }
-    .tgl-inp:checked + .tgl-bg { background-color: #10b981; }
+    .tgl-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #e5e7eb; border-radius: 20px; transition: 0.3s; }
+    .tgl-ball { position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; background: white; border-radius: 50%; transition: 0.3s; }
+    .tgl-inp:checked + .tgl-bg { background: #10b981; }
     .tgl-inp:checked + .tgl-bg .tgl-ball { left: 18px; }
-    .finish-toggle .tgl-inp:checked + .tgl-bg { background-color: #3b82f6; } 
+    .finish-toggle .tgl-inp:checked + .tgl-bg { background: #3b82f6; } 
 
-    .addon-checkbox:checked + div { background-color: #fce7f3; border-color: #ec4899; color: #be185d; }
     .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); }
-    .color-btn { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid white; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .color-btn { width: 26px; height: 26px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .color-btn.selected { border-color: #ec4899; transform: scale(1.2); ring: 2px solid #ec4899; }
     
-    .custom-table th { background-color: rgba(255, 255, 255, 0.9); color: #be185d; font-weight: 600; font-size: 11px; padding: 10px 4px; text-align: left; border-bottom: 2px solid #fbcfe8; white-space: nowrap; }
-    .custom-table td { padding: 8px 4px; border-bottom: 1px solid #fff0f5; vertical-align: middle; font-size: 13px; color: #374151; }
+    .custom-table th { background: rgba(255, 255, 255, 0.9); color: #be185d; font-size: 11px; padding: 10px 4px; text-align: left; border-bottom: 2px solid #fbcfe8; white-space: nowrap; }
+    .custom-table td { padding: 8px 4px; border-bottom: 1px solid #fff0f5; font-size: 13px; color: #374151; vertical-align: middle; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
   </style>
  </head>
  <body class="h-full">
@@ -61,23 +60,23 @@
 
    <div class="glass-card rounded-2xl p-3 border-pink-100 border mb-2 shrink-0 relative z-10">
     <div class="flex gap-2 mb-2">
-      <div class="w-[60%] input-group">
-        <label>ชื่อลูกค้า *</label> 
+      <div class="w-[60%]">
+        <label class="block text-pink-700 font-bold text-[11px] mb-0.5">ชื่อลูกค้า *</label> 
         <input type="text" id="customer-name" class="input-field" placeholder="ชื่อลูกค้า">
       </div>
-      <div class="w-[40%] input-group">
-        <label>วันที่รับ *</label> 
+      <div class="w-[40%]">
+        <label class="block text-pink-700 font-bold text-[11px] mb-0.5">วันที่รับ *</label> 
         <input type="date" id="order-date" class="input-field text-center text-xs">
       </div>
     </div>
 
     <div class="grid grid-cols-12 gap-2 mb-2">
-      <div class="col-span-5 input-group">
-        <label>จำนวนดอก</label> 
+      <div class="col-span-5">
+        <label class="block text-pink-700 font-bold text-[11px] mb-0.5">จำนวนดอก</label> 
         <input type="number" id="flower-count" class="input-field text-center" placeholder="1" value="1" inputmode="numeric" oninput="calculatePrice()">
       </div>
-      <div class="col-span-7 input-group">
-        <label>ราคา (ออโต้)</label> 
+      <div class="col-span-7">
+        <label class="block text-pink-700 font-bold text-[11px] mb-0.5">ราคา (ออโต้)</label> 
         <input type="number" id="price" class="input-field text-right input-readonly" placeholder="0" readonly>
       </div>
     </div>
@@ -93,8 +92,8 @@
         </label>
     </div>
 
-    <div class="input-group mb-2">
-       <input type="text" id="notes" class="input-field" style="background-color: #fff1f2;" placeholder="📝 หมายเหตุ (พิมพ์ 'ก่อน' เพื่อแซงคิว)">
+    <div class="mb-2">
+       <input type="text" id="notes" class="input-field" style="background-color: #fff1f2;" placeholder="📝 หมายเหตุ (พิมพ์ 'ก่อน' เพื่อแทรกคิว)">
     </div>
     
     <div class="border-t border-pink-100 my-2"></div>
@@ -125,7 +124,7 @@
            <h2 class="text-sm font-bold text-pink-700 flex items-center gap-2">
              📋 รายการ <span id="order-count" class="bg-white text-pink-600 px-2 py-0.5 rounded-full text-xs shadow-sm">0</span>
            </h2>
-           <button id="refresh-btn" class="bg-white text-pink-500 w-6 h-6 rounded-full shadow-sm flex items-center justify-center hover:bg-pink-100 active:scale-90 transition-all">🔄</button>
+           <button id="refresh-btn" onclick="fetchData()" class="bg-white text-pink-500 w-6 h-6 rounded-full shadow-sm flex items-center justify-center hover:bg-pink-100 active:scale-90 transition-all">🔄</button>
        </div>
        <div id="total-revenue" class="text-green-600 font-bold text-sm bg-white px-2 py-0.5 rounded-lg shadow-sm">฿0</div>
      </div>
@@ -135,7 +134,7 @@
         <p class="font-light text-sm">กำลังโหลดข้อมูล...</p>
      </div>
 
-     <div id="table-wrapper" class="overflow-auto scrollbar-pink flex-1 hidden">
+     <div id="table-wrapper" class="overflow-auto flex-1 hidden">
        <table class="custom-table w-full min-w-[700px]">
          <thead class="sticky top-0 z-20">
            <tr>
@@ -158,8 +157,7 @@
 
   <script>
     // -----------------------------------------------------------------------
-    // ⚠️ ใส่ URL ของ Apps Script เดิมของคุณตรงนี้
-    // -----------------------------------------------------------------------
+    // ⚠️ อย่าลืมเอา URL ของ Apps Script มาใส่ตรงนี้นะครับ
     const API_URL = "https://script.google.com/macros/s/AKfycbykNWYj-Bdit4PnqxRdOGHULxrxxNmO9G1p6lDz4wkSgQH3xiXPhqKA5zJxgLWHuN8zdQ/exec";
     // -----------------------------------------------------------------------
 
@@ -167,6 +165,7 @@
     const flowerColors = Object.keys(COLOR_MAP);
     const bouquetColors = ['#ec4899', '#ef4444', '#ffffff', '#000000', '#3b82f6', '#eab308', '#a855f7'];
     
+    // ตารางราคา (ตามที่ตกลงกัน)
     const PRICE_TIERS = [{n:30,p:639},{n:20,p:439},{n:14,p:339},{n:10,p:269},{n:7,p:199},{n:5,p:159},{n:3,p:109},{n:1,p:59}];
 
     let state = { fColors: [], bColors: [] };
@@ -177,11 +176,6 @@
         renderColorPickers();
         document.getElementById('order-date').valueAsDate = new Date();
         document.getElementById('add-order-btn').onclick = handleAdd;
-        document.getElementById('refresh-btn').onclick = () => {
-            document.getElementById('refresh-btn').classList.add('spin-anim');
-            setTimeout(() => document.getElementById('refresh-btn').classList.remove('spin-anim'), 800);
-            fetchData();
-        };
         calculatePrice();
         fetchData();
     };
@@ -194,11 +188,15 @@
 
         if (count > 0) {
             let baseTier = null;
+            // หาเรทราคาที่น้อยกว่าหรือเท่ากับจำนวนดอก
             for (let tier of PRICE_TIERS) { if (count >= tier.n) { baseTier = tier; break; } }
-            if (baseTier) finalPrice = baseTier.p + ((count - baseTier.n) * 30);
+            if (baseTier) {
+                // ราคาฐาน + (ส่วนต่าง * 30 บาท)
+                finalPrice = baseTier.p + ((count - baseTier.n) * 30);
+            }
         }
 
-        // 🔥 บวกเพิ่มตามออปชั่น
+        // บวกค่าออปชั่นเสริม
         if (hasCrown) finalPrice += 15;
         if (hasButterfly) finalPrice += 10;
         
@@ -222,7 +220,7 @@
             console.error(err);
             loader.classList.add('hidden');
             empty.classList.remove('hidden');
-            document.querySelector('#empty-state p').innerText = "เชื่อมต่อไม่ได้ ลองรีเฟรชใหม่";
+            document.querySelector('#empty-state p').innerText = "โหลดไม่ได้ ลองรีเฟรชใหม่";
         }
     }
 
@@ -230,12 +228,14 @@
         const name = document.getElementById('customer-name').value;
         const price = document.getElementById('price').value;
         const dateVal = document.getElementById('order-date').value;
+        
         if (!name) { alert('⚠️ ใส่ชื่อลูกค้าก่อนนะ'); return; }
         
         const btn = document.getElementById('add-order-btn');
         btn.innerHTML = '⏳ กำลังส่ง...';
         btn.disabled = true;
 
+        // จัดการหมายเหตุและออปชั่นเสริม
         const hasCrown = document.getElementById('addon-crown').checked;
         const hasButterfly = document.getElementById('addon-butterfly').checked;
         let noteText = document.getElementById('notes').value;
@@ -250,7 +250,7 @@
         const newItem = {
             id: 'id_' + Date.now(),
             customer_name: name,
-            queue_number: '...', // ใส่ ... ไว้ก่อน เดี๋ยวโหลดเสร็จเลขจริงจะมา
+            queue_number: '...', // รอ Server ตอบกลับ
             flower_count: document.getElementById('flower-count').value || '1',
             order_date: dateVal,
             price: price || '0',
@@ -261,25 +261,24 @@
             finish_or_not: 'not finish'
         };
 
-        // แสดงผลหลอกๆ ไปก่อนระหว่างรอ server ตอบกลับ
+        // UI Updates
         orders.push(newItem); 
         renderTable(); 
         resetForm();
         
-        // ส่งข้อมูลไปเซฟ และคำนวณคิวใหม่
+        // ส่งข้อมูล
         fetch(API_URL + "?action=create", {
             method: 'POST', mode: 'no-cors', headers: { "Content-Type": "text/plain" }, body: JSON.stringify(newItem)
         }).then(() => {
             btn.innerHTML = '✅ เรียบร้อย!';
-            // ดึงข้อมูลใหม่ทันทีเพื่อให้เห็นเลขคิวที่ถูกต้อง
             setTimeout(() => { 
                 btn.innerHTML = '✨ บันทึกออเดอร์ ✨'; 
                 btn.disabled = false;
-                fetchData(); 
+                fetchData(); // ดึงข้อมูลใหม่เพื่อเอาเลขคิวจริง
             }, 1000);
         }).catch(e => {
             console.error(e);
-            alert('มีปัญหาในการบันทึก ลองใหม่อีกครั้ง');
+            alert('มีปัญหาในการบันทึก');
             btn.disabled = false;
         });
     }
@@ -319,9 +318,10 @@
             const tr = document.createElement('tr');
             tr.className = 'pop-row hover:bg-white/50 transition-colors';
             
-            const fDots = getDots(order.flower_colors);
-            const bDots = getDots(order.bouquet_colors);
             const isFinished = (order.finish_or_not === 'finish');
+            const isPriority = order.notes && order.notes.includes('ก่อน');
+            const queueStyle = isPriority ? 'text-red-500 font-extrabold text-lg' : 'text-pink-600 font-bold';
+
             let dateDisplay = "-";
             if(order.order_date) {
                 const d = new Date(order.order_date);
@@ -329,25 +329,21 @@
                 else dateDisplay = order.order_date;
             }
 
-            // ไฮไลท์พวกคิวแทรก
-            const isPriority = order.notes && order.notes.includes('ก่อน');
-            const queueColor = isPriority ? 'text-red-500 font-extrabold text-lg' : 'text-pink-600 font-bold';
-
             tr.innerHTML = `
                 <td class="text-center text-xs font-bold text-gray-500">${dateDisplay}</td>
-                <td class="text-center ${queueColor}">${order.queue_number}</td>
+                <td class="text-center ${queueStyle}">${order.queue_number}</td>
                 <td>
                     <div class="font-bold text-gray-700 text-sm">${order.customer_name}</div>
                     ${order.notes ? `<div class="text-[10px] text-pink-500 font-medium truncate max-w-[140px]">${order.notes}</div>` : ''}
                 </td>
                 <td class="text-center"><span class="bg-pink-100 text-pink-700 px-2 py-0.5 rounded text-xs font-bold">${order.flower_count}</span></td>
                 <td>
-                    <div class="flex flex-col gap-1">
-                        <div class="flex items-center gap-1 text-[10px] text-gray-500">
-                           <span class="text-pink-400 font-bold">ด:</span> <div class="flex gap-0.5 flex-wrap">${fDots || '-'}</div>
+                    <div class="flex flex-col gap-1 text-[10px] text-gray-500">
+                        <div class="flex items-center gap-1">
+                           <span class="text-pink-400 font-bold">ด:</span> <div class="flex gap-0.5 flex-wrap">${getDots(order.flower_colors)}</div>
                         </div>
-                        <div class="flex items-center gap-1 text-[10px] text-gray-500">
-                           <span class="text-purple-400 font-bold">ช:</span> <div class="flex gap-0.5 flex-wrap">${bDots || '-'}</div>
+                        <div class="flex items-center gap-1">
+                           <span class="text-purple-400 font-bold">ช:</span> <div class="flex gap-0.5 flex-wrap">${getDots(order.bouquet_colors)}</div>
                         </div>
                     </div>
                 </td>
@@ -365,7 +361,7 @@
                     </label>
                 </td>
                 <td class="text-center">
-                    <button onclick="handleDelete('${order.id}')" class="text-red-300 hover:text-red-500 text-lg transition-colors">×</button>
+                    <button onclick="handleDelete('${order.id}')" class="text-red-300 hover:text-red-500 text-lg">×</button>
                 </td>
             `;
             tbody.appendChild(tr);
@@ -375,12 +371,12 @@
     }
 
     function getDots(colorString) {
-        if(!colorString) return '';
+        if(!colorString) return '-';
         const reverseMap = {};
         for(let k in COLOR_MAP) reverseMap[COLOR_MAP[k]] = k;
         return colorString.split(', ').map(c => {
             const hex = reverseMap[c] || c; 
-            if(hex.startsWith('#')) return `<div class="w-2.5 h-2.5 rounded-full border border-gray-300 shadow-sm" style="background-color: ${hex};" title="${c}"></div>`;
+            if(hex.startsWith('#')) return `<div class="w-2.5 h-2.5 rounded-full border border-gray-300 shadow-sm" style="background:${hex};" title="${c}"></div>`;
             return `<span>${c}</span>`;
         }).join('');
     }
@@ -391,9 +387,12 @@
         document.getElementById('notes').value = '';
         document.getElementById('addon-crown').checked = false;
         document.getElementById('addon-butterfly').checked = false;
+        state.fColors = []; state.bColors = [];
+        renderColorPickers();
         calculatePrice(); 
         document.getElementById('customer-name').focus();
     }
+
     function renderColorPickers() {
         const render = (colors, elId, type) => {
             const el = document.getElementById(elId);
@@ -414,6 +413,7 @@
         render(flowerColors, 'flower-colors-picker', 'f');
         render(bouquetColors, 'bouquet-colors-picker', 'b');
     }
+
     function createFallingFlowers() {
         const container = document.getElementById('falling-container');
         const emojis = ['🌸', '🌹', '🌺', '🌻', '🌷', '💐'];
