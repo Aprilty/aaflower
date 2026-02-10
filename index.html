@@ -16,28 +16,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Mali:wght@700&display=swap" rel="stylesheet">
   
   <style>
-    /* 🅰️ ใช้ฟอนต์ปกติ (System Font) อ่านง่ายที่สุด */
+    /* สไตล์เดิมทั้งหมด */
     body { 
         box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; 
         overflow: hidden; 
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
-    
-    /* 🧸 หัวข้อแอปใช้ฟอนต์น่ารักเหมือนเดิม */
     .font-cute { font-family: 'Mali', cursive; }
-
-    /* 🌸 ดอกไม้ร่วง */
     #falling-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: linear-gradient(180deg, #fff0f5 0%, #ffe4e6 100%); }
     .falling-item { position: absolute; top: -10%; animation: fall linear infinite; opacity: 0.6; z-index: 0; }
     @keyframes fall { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 0.8; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
     .cute-wiggle { display: inline-block; animation: wiggle 2s ease-in-out infinite; }
     @keyframes wiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 
-    /* Input Fields (ฟอนต์ปกติ) */
     .input-group-label { font-size: 14px; font-weight: 700; color: #db2777; margin-bottom: 4px; display: block; margin-left: 4px; }
     .input-field { 
         width: 100%; height: 48px; padding: 0 12px; 
-        border: 2px solid #fbcfe8; border-radius: 12px; /* ลดความมนลงนิดนึงให้ดูทางการขึ้น */
+        border: 2px solid #fbcfe8; border-radius: 12px; 
         font-size: 16px; 
         background: rgba(255, 255, 255, 0.95); 
         color: #333; transition: all 0.2s;
@@ -46,14 +41,11 @@
     .input-field:focus { border-color: #ec4899; outline: none; transform: scale(1.01); }
     .input-readonly { background: #fdf2f8; color: #be185d; pointer-events: none; font-weight: bold; }
 
-    /* Glass Card */
     .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: 2px solid rgba(255, 255, 255, 0.8); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); border-radius: 20px; }
     
-    /* Checkbox Card */
     .addon-card { position: relative; border: 2px solid #fbcfe8; background: white; border-radius: 12px; padding: 0; text-align: center; transition: all 0.2s; cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; color: #555; }
     .addon-checkbox:checked + .addon-card { background-color: #fce7f3; border-color: #ec4899; color: #be185d; box-shadow: 0 2px 5px rgba(236, 72, 153, 0.2); transform: translateY(-2px); }
 
-    /* Toggle Switch */
     .tgl-wrap { position: relative; display: inline-block; width: 48px; height: 26px; }
     .tgl-inp { display: none; }
     .tgl-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #e5e7eb; border-radius: 20px; transition: 0.3s; border: 1px solid #d1d5db; }
@@ -62,12 +54,10 @@
     .tgl-inp:checked + .tgl-bg .tgl-ball { left: 24px; }
     .finish-toggle .tgl-inp:checked + .tgl-bg { background: #3b82f6; border-color: #3b82f6; } 
 
-    /* Color Button */
     .color-btn { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: transform 0.2s; flex-shrink: 0; }
     .color-btn.selected { border-color: #ec4899; transform: scale(1.2); ring: 2px solid #ec4899; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     
-    /* 🔍 ตาราง (ฟอนต์ปกติ) */
     .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; }
     .custom-table th { 
         background: rgba(255,241,242, 0.98); color: #be185d; font-weight: 800;
@@ -76,7 +66,7 @@
     }
     .custom-table td { 
         padding: 16px 10px; border-bottom: 1px solid #fff0f5; 
-        font-size: 18px; /* ตัวหนังสือใหญ่ */
+        font-size: 18px; 
         vertical-align: middle; 
     }
     
@@ -195,7 +185,7 @@
   </div>
 
   <script>
-    // ⚠️⚠️⚠️ เปลี่ยน Link เป็นของพี่ (หลังจากแก้ Script เสร็จแล้ว) ตรงนี้ครับ ⚠️⚠️⚠️
+    // ⚠️⚠️⚠️ เปลี่ยน Link Google Script ของพี่ตรงนี้ครับ ⚠️⚠️⚠️
     const API_URL = "https://script.google.com/macros/s/AKfycbykNWYj-Bdit4PnqxRdOGHULxrxxNmO9G1p6lDz4wkSgQH3xiXPhqKA5zJxgLWHuN8zdQ/exec";
     
     const COLOR_MAP = { '#ef4444':'แดง', '#f97316':'ส้ม', '#eab308':'เหลือง', '#84cc16':'เขียวอ่อน', '#22c55e':'เขียว', '#06b6d4':'ฟ้า', '#3b82f6':'น้ำเงิน', '#a855f7':'ม่วง', '#ec4899':'ชมพู', '#ffffff':'ขาว', '#000000':'ดำ' };
@@ -266,7 +256,7 @@
         const newItem = {
             id: 'id_' + Date.now(),
             customer_name: name,
-            queue_number: '...',
+            queue_number: '...', // ใส่เป็นจุดไปก่อน เดี๋ยวแอพคำนวณใหม่ให้ตอนโชว์
             flower_count: document.getElementById('flower-count').value || '1',
             order_date: dateVal,
             price: price || '0',
@@ -307,19 +297,15 @@
         tbody.innerHTML = '';
         let total = 0;
         
-        // 🗓️ เรียงลำดับ: วันที่น้อยสุด (มาถึงก่อน) ไว้บนสุด -> แล้วตามด้วยคิว
+        // 1. เรียงข้อมูลตามวันที่
         orders.sort((a, b) => {
             const dateA = new Date(a.order_date);
             const dateB = new Date(b.order_date);
-            
-            // ถ้าวันที่ต่างกัน ให้เอาวันที่น้อยกว่าขึ้นก่อน
-            if (dateA - dateB !== 0) return dateA - dateB;
-            
-            // ถ้าวันที่เท่ากัน ให้เรียงตามคิว
-            return (parseInt(a.queue_number)||999) - (parseInt(b.queue_number)||999);
+            return dateA - dateB; 
         });
 
-        orders.forEach(order => {
+        // 2. วนลูปสร้างตาราง พร้อมคำนวณเลขคิวใหม่ (index + 1)
+        orders.forEach((order, index) => {
             if (!order.is_paid) total += parseFloat(order.price) || 0;
             const tr = document.createElement('tr');
             tr.className = 'hover:bg-white/50 transition-colors group';
@@ -327,6 +313,9 @@
             const isFinished = (order.finish_or_not === 'finish');
             const isPriority = order.notes && order.notes.includes('ก่อน');
             const queueStyle = isPriority ? 'text-red-500 font-extrabold text-2xl' : 'text-pink-600 font-bold text-2xl';
+
+            // ✅ คำนวณเลขคิวใหม่ตรงนี้เลย (ลำดับที่ + 1)
+            const dynamicQueueNumber = index + 1;
 
             let dateDisplay = "-";
             if(order.order_date) {
@@ -336,8 +325,8 @@
             }
 
             const queueDisplay = isFinished 
-                ? `<span class="text-green-500 mr-1 text-xl">✅</span>${order.queue_number}` 
-                : order.queue_number;
+                ? `<span class="text-green-500 mr-1 text-xl">✅</span>${dynamicQueueNumber}` 
+                : dynamicQueueNumber;
 
             tr.innerHTML = `
                 <td class="text-center font-bold text-gray-500 text-lg">${dateDisplay}</td>
