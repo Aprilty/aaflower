@@ -16,101 +16,105 @@
   <link href="https://fonts.googleapis.com/css2?family=Mali:wght@700&display=swap" rel="stylesheet">
   
   <style>
-    /* สไตล์เดิมทั้งหมด */
     body { 
         box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; 
         overflow: hidden; 
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     .font-cute { font-family: 'Mali', cursive; }
+    
     #falling-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: linear-gradient(180deg, #fff0f5 0%, #ffe4e6 100%); }
     .falling-item { position: absolute; top: -10%; animation: fall linear infinite; opacity: 0.6; z-index: 0; }
     @keyframes fall { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 0.8; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
     .cute-wiggle { display: inline-block; animation: wiggle 2s ease-in-out infinite; }
     @keyframes wiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 
-    .input-group-label { font-size: 14px; font-weight: 700; color: #db2777; margin-bottom: 4px; display: block; margin-left: 4px; }
+    /* ปรับ Input ให้เล็กลงนิดนึงเพื่อประหยัดที่ */
+    .input-group-label { font-size: 13px; font-weight: 700; color: #db2777; margin-bottom: 2px; display: block; margin-left: 4px; }
     .input-field { 
-        width: 100%; height: 48px; padding: 0 12px; 
-        border: 2px solid #fbcfe8; border-radius: 12px; 
+        width: 100%; height: 40px; /* ลดความสูงลง */
+        padding: 0 10px; 
+        border: 2px solid #fbcfe8; border-radius: 10px; 
         font-size: 16px; 
         background: rgba(255, 255, 255, 0.95); 
         color: #333; transition: all 0.2s;
-        box-shadow: 0 2px 4px rgba(236, 72, 153, 0.1);
+        box-shadow: 0 1px 3px rgba(236, 72, 153, 0.1);
     }
     .input-field:focus { border-color: #ec4899; outline: none; transform: scale(1.01); }
     .input-readonly { background: #fdf2f8; color: #be185d; pointer-events: none; font-weight: bold; }
 
-    .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: 2px solid rgba(255, 255, 255, 0.8); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); border-radius: 20px; }
+    .glass-card { background: rgba(255, 255, 255, 0.90); backdrop-filter: blur(8px); border: 2px solid rgba(255, 255, 255, 0.8); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); border-radius: 16px; }
     
-    .addon-card { position: relative; border: 2px solid #fbcfe8; background: white; border-radius: 12px; padding: 0; text-align: center; transition: all 0.2s; cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; color: #555; }
-    .addon-checkbox:checked + .addon-card { background-color: #fce7f3; border-color: #ec4899; color: #be185d; box-shadow: 0 2px 5px rgba(236, 72, 153, 0.2); transform: translateY(-2px); }
+    .addon-card { position: relative; border: 2px solid #fbcfe8; background: white; border-radius: 10px; padding: 0; text-align: center; transition: all 0.2s; cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #555; }
+    .addon-checkbox:checked + .addon-card { background-color: #fce7f3; border-color: #ec4899; color: #be185d; box-shadow: 0 2px 5px rgba(236, 72, 153, 0.2); transform: translateY(-1px); }
 
-    .tgl-wrap { position: relative; display: inline-block; width: 48px; height: 26px; }
+    /* Toggle Switch */
+    .tgl-wrap { position: relative; display: inline-block; width: 44px; height: 24px; }
     .tgl-inp { display: none; }
     .tgl-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #e5e7eb; border-radius: 20px; transition: 0.3s; border: 1px solid #d1d5db; }
-    .tgl-ball { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+    .tgl-ball { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
     .tgl-inp:checked + .tgl-bg { background: #10b981; border-color: #10b981; }
-    .tgl-inp:checked + .tgl-bg .tgl-ball { left: 24px; }
+    .tgl-inp:checked + .tgl-bg .tgl-ball { left: 22px; }
     .finish-toggle .tgl-inp:checked + .tgl-bg { background: #3b82f6; border-color: #3b82f6; } 
 
-    .color-btn { width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: transform 0.2s; flex-shrink: 0; }
+    .color-btn { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.15); transition: transform 0.2s; flex-shrink: 0; }
     .color-btn.selected { border-color: #ec4899; transform: scale(1.2); ring: 2px solid #ec4899; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     
+    /* 🔍 ปรับตารางให้ใหญ่อ่านง่าย */
     .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; }
     .custom-table th { 
         background: rgba(255,241,242, 0.98); color: #be185d; font-weight: 800;
-        font-size: 16px; padding: 14px 10px; 
+        font-size: 16px; padding: 12px 8px; 
         border-bottom: 2px solid #fbcfe8; white-space: nowrap; 
     }
     .custom-table td { 
-        padding: 16px 10px; border-bottom: 1px solid #fff0f5; 
-        font-size: 18px; 
+        padding: 14px 8px; border-bottom: 1px solid #fff0f5; 
+        font-size: 18px; /* ตัวหนังสือใหญ่ */
         vertical-align: middle; 
     }
     
-    .col-date { min-width: 100px; }
-    .col-queue { min-width: 65px; }
-    .col-name { min-width: 160px; }
-    .col-count { min-width: 70px; }
-    .col-color { min-width: 110px; }
-    .col-price { min-width: 90px; }
-    .col-action { min-width: 70px; }
+    .col-date { min-width: 90px; }
+    .col-queue { min-width: 60px; }
+    .col-name { min-width: 150px; }
+    .col-count { min-width: 60px; }
+    .col-color { min-width: 100px; }
+    .col-price { min-width: 80px; }
+    .col-action { min-width: 60px; }
   </style>
  </head>
  <body class="h-full text-gray-800 relative">
   <div id="falling-container"></div>
 
-  <div id="app" class="h-full w-full p-3 pb-0 max-w-md mx-auto relative flex flex-col z-10">
-   <header class="text-center mb-2 shrink-0 pt-1">
-     <h1 class="text-3xl font-bold text-pink-600 tracking-wider cute-wiggle font-cute" style="text-shadow: 2px 2px 0px #fff;">🌸 AAFLOWERSHOP</h1>
+  <div id="app" class="h-full w-full p-2 pb-0 max-w-md mx-auto relative flex flex-col z-10">
+   <header class="text-center mb-1 shrink-0 pt-1">
+     <h1 class="text-2xl font-bold text-pink-600 tracking-wider cute-wiggle font-cute" style="text-shadow: 2px 2px 0px #fff;">🌸 AAFLOWERSHOP</h1>
    </header>
 
-   <div class="glass-card p-3 mb-2 shrink-0">
-    <div class="flex gap-2 mb-2">
+   <div class="glass-card p-2 mb-2 shrink-0">
+    <div class="flex gap-2 mb-1">
         <div class="flex-[1.8]"> 
-            <label class="input-group-label">ชื่อลูกค้า *</label> 
-            <input type="text" id="customer-name" class="input-field" placeholder="ระบุชื่อ...">
+            <label class="input-group-label">ชื่อลูกค้า</label> 
+            <input type="text" id="customer-name" class="input-field" placeholder="ชื่อ...">
         </div>
         <div class="flex-[1.2]"> 
-            <label class="input-group-label">วันที่รับ *</label> 
+            <label class="input-group-label">วันที่รับ</label> 
             <input type="date" id="order-date" class="input-field px-1 block w-full text-sm">
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-2 mb-2">
+    <div class="grid grid-cols-2 gap-2 mb-1">
       <div>
-        <label class="input-group-label text-center">จำนวนดอก</label> 
-        <input type="number" id="flower-count" class="input-field text-center text-xl font-bold" placeholder="1" value="1" inputmode="numeric" oninput="calculatePrice()">
+        <label class="input-group-label text-center">จำนวน</label> 
+        <input type="number" id="flower-count" class="input-field text-center text-lg font-bold" placeholder="1" value="1" inputmode="numeric" oninput="calculatePrice()">
       </div>
       <div>
-        <label class="input-group-label text-center">ราคา (฿)</label> 
-        <input type="number" id="price" class="input-field text-center text-xl font-bold input-readonly" placeholder="0" readonly>
+        <label class="input-group-label text-center">ราคา</label> 
+        <input type="number" id="price" class="input-field text-center text-lg font-bold input-readonly" placeholder="0" readonly>
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-2 mb-2 h-12">
+    <div class="grid grid-cols-2 gap-2 mb-1 h-10">
         <label class="block h-full w-full">
             <input type="checkbox" id="addon-crown" class="addon-checkbox hidden" onchange="calculatePrice()">
             <div class="addon-card">👑 มงกุฎ (+15)</div>
@@ -121,46 +125,44 @@
         </label>
     </div>
 
-    <div class="mb-2">
-       <input type="text" id="notes" class="input-field bg-pink-50" style="background-color: #fff1f2; border-style: dashed; border-color: #fbcfe8;" placeholder="📝 หมายเหตุ (พิมพ์ 'ก่อน' แซงคิว)">
+    <div class="mb-1">
+       <input type="text" id="notes" class="input-field bg-pink-50 text-sm" style="background-color: #fff1f2; border-style: dashed; border-color: #fbcfe8;" placeholder="📝 หมายเหตุ (พิมพ์ 'ก่อน' แซงคิว)">
     </div>
     
-    <div class="border-t border-pink-200/50 my-2"></div>
-    
-    <div class="space-y-2">
+    <div class="space-y-1 mt-1">
       <div class="flex items-center gap-2 overflow-hidden">
-        <span class="text-sm font-bold text-pink-500 w-8 shrink-0">ดอก</span>
-        <div id="flower-colors-picker" class="flex gap-2 overflow-x-auto hide-scrollbar flex-1 py-1 px-1 pr-4 items-center"></div>
+        <span class="text-xs font-bold text-pink-500 w-6 shrink-0">ดอก</span>
+        <div id="flower-colors-picker" class="flex gap-1 overflow-x-auto hide-scrollbar flex-1 py-1 px-1 pr-4 items-center"></div>
       </div>
       <div class="flex items-center gap-2 overflow-hidden">
-        <span class="text-sm font-bold text-purple-500 w-8 shrink-0">ช่อ</span>
-        <div id="bouquet-colors-picker" class="flex gap-2 overflow-x-auto hide-scrollbar flex-1 py-1 px-1 pr-4 items-center"></div>
+        <span class="text-xs font-bold text-purple-500 w-6 shrink-0">ช่อ</span>
+        <div id="bouquet-colors-picker" class="flex gap-1 overflow-x-auto hide-scrollbar flex-1 py-1 px-1 pr-4 items-center"></div>
       </div>
     </div>
 
-    <button id="add-order-btn" class="mt-3 w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white py-3 rounded-2xl font-bold shadow-lg shadow-pink-200 active:scale-95 transition-all text-xl flex justify-center items-center gap-2 border-2 border-white">
-      <span>✨ บันทึกออเดอร์ ✨</span>
+    <button id="add-order-btn" class="mt-2 w-full bg-gradient-to-r from-pink-400 to-rose-400 text-white py-2 rounded-xl font-bold shadow-md active:scale-95 transition-all text-lg flex justify-center items-center gap-2 border border-white">
+      <span>✨ บันทึก ✨</span>
     </button>
    </div>
 
-   <div class="glass-card flex-1 flex flex-col min-h-0 mb-3 overflow-hidden relative">
+   <div class="glass-card flex-1 flex flex-col min-h-0 mb-3 overflow-hidden relative border-t-4 border-pink-200">
      <div id="loading-overlay" class="hidden absolute inset-0 bg-white/60 flex items-center justify-center z-50 backdrop-blur-sm">
        <div class="text-pink-500 font-bold text-xl animate-pulse">กำลังโหลด...</div>
      </div>
 
-     <div class="bg-pink-50/60 p-3 flex justify-between items-center border-b border-pink-100 shrink-0">
+     <div class="bg-pink-50/60 p-2 flex justify-between items-center border-b border-pink-100 shrink-0">
        <div class="flex items-center gap-2">
            <h2 class="text-lg font-bold text-pink-700 pl-1">
              รายการ (<span id="order-count">0</span>)
            </h2>
-           <button onclick="fetchData()" class="bg-white text-pink-500 w-10 h-10 rounded-full shadow-sm flex items-center justify-center hover:bg-pink-100 active:scale-90 transition-all border border-pink-100 text-xl">🔄</button>
+           <button onclick="fetchData()" class="bg-white text-pink-500 w-9 h-9 rounded-full shadow-sm flex items-center justify-center hover:bg-pink-100 active:scale-90 transition-all border border-pink-100 text-lg">🔄</button>
        </div>
-       <div id="total-revenue" class="text-green-600 font-bold text-xl bg-white px-3 py-1 rounded-xl shadow-sm border border-green-100">฿0</div>
+       <div id="total-revenue" class="text-green-600 font-bold text-lg bg-white px-2 py-1 rounded-lg shadow-sm border border-green-100">฿0</div>
      </div>
 
      <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center p-6 text-pink-300 hidden">
-        <div class="text-7xl mb-2 animate-bounce">🌷</div>
-        <p class="font-bold text-lg text-pink-400">ยังไม่มีออเดอร์จ้า</p>
+        <div class="text-6xl mb-2 animate-bounce">🌷</div>
+        <p class="font-bold text-lg text-pink-400">ว่างเปล่า...</p>
      </div>
 
      <div id="table-wrapper" class="overflow-auto flex-1 hidden">
@@ -245,7 +247,7 @@
         if (!name) { alert('⚠️ ใส่ชื่อลูกค้าก่อนนะจ๊ะ'); return; }
         
         const btn = document.getElementById('add-order-btn');
-        btn.innerHTML = '⏳ กำลังส่ง...'; btn.disabled = true;
+        btn.innerHTML = '⏳...'; btn.disabled = true;
 
         let noteText = document.getElementById('notes').value;
         let addons = [];
@@ -256,7 +258,7 @@
         const newItem = {
             id: 'id_' + Date.now(),
             customer_name: name,
-            queue_number: '...', // ใส่เป็นจุดไปก่อน เดี๋ยวแอพคำนวณใหม่ให้ตอนโชว์
+            queue_number: '...',
             flower_count: document.getElementById('flower-count').value || '1',
             order_date: dateVal,
             price: price || '0',
@@ -272,8 +274,8 @@
         fetch(API_URL + "?action=create", {
             method: 'POST', mode: 'no-cors', headers: { "Content-Type": "text/plain" }, body: JSON.stringify(newItem)
         }).then(() => {
-            btn.innerHTML = '✅ เรียบร้อย!';
-            setTimeout(() => { btn.innerHTML = '✨ บันทึกออเดอร์ ✨'; btn.disabled = false; fetchData(); }, 1000);
+            btn.innerHTML = '✅';
+            setTimeout(() => { btn.innerHTML = '✨ บันทึก ✨'; btn.disabled = false; fetchData(); }, 1000);
         });
     }
 
@@ -314,7 +316,6 @@
             const isPriority = order.notes && order.notes.includes('ก่อน');
             const queueStyle = isPriority ? 'text-red-500 font-extrabold text-2xl' : 'text-pink-600 font-bold text-2xl';
 
-            // ✅ คำนวณเลขคิวใหม่ตรงนี้เลย (ลำดับที่ + 1)
             const dynamicQueueNumber = index + 1;
 
             let dateDisplay = "-";
@@ -374,7 +375,7 @@
         const reverseMap = {}; for(let k in COLOR_MAP) reverseMap[COLOR_MAP[k]] = k;
         return colorString.split(', ').map(c => {
             const hex = reverseMap[c] || c; 
-            if(hex.startsWith('#')) return `<div class="w-5 h-5 rounded-full border border-gray-300 shadow-sm shrink-0" style="background:${hex};"></div>`;
+            if(hex.startsWith('#')) return `<div class="w-4 h-4 rounded-full border border-gray-300 shadow-sm shrink-0" style="background:${hex};"></div>`;
             return `<span>${c}</span>`;
         }).join('');
     }
