@@ -13,14 +13,19 @@
   <link rel="apple-touch-icon" href="aaflower.png">
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Mali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Mali:wght@700&display=swap" rel="stylesheet">
   
   <style>
+    /* 🅰️ ใช้ฟอนต์ปกติ (System Font) อ่านง่ายที่สุด */
     body { 
         box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; 
-        overflow: hidden; font-family: 'Mali', cursive; 
+        overflow: hidden; 
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     
+    /* 🧸 หัวข้อแอปใช้ฟอนต์น่ารักเหมือนเดิม */
+    .font-cute { font-family: 'Mali', cursive; }
+
     /* 🌸 ดอกไม้ร่วง */
     #falling-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: linear-gradient(180deg, #fff0f5 0%, #ffe4e6 100%); }
     .falling-item { position: absolute; top: -10%; animation: fall linear infinite; opacity: 0.6; z-index: 0; }
@@ -28,24 +33,24 @@
     .cute-wiggle { display: inline-block; animation: wiggle 2s ease-in-out infinite; }
     @keyframes wiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 
-    /* Input Fields */
-    .input-group-label { font-size: 15px; font-weight: 700; color: #db2777; margin-bottom: 4px; display: block; margin-left: 4px; }
+    /* Input Fields (ฟอนต์ปกติ) */
+    .input-group-label { font-size: 14px; font-weight: 700; color: #db2777; margin-bottom: 4px; display: block; margin-left: 4px; }
     .input-field { 
         width: 100%; height: 48px; padding: 0 12px; 
-        border: 2px solid #fbcfe8; border-radius: 16px; 
-        font-size: 16px; font-family: 'Mali', cursive;
+        border: 2px solid #fbcfe8; border-radius: 12px; /* ลดความมนลงนิดนึงให้ดูทางการขึ้น */
+        font-size: 16px; 
         background: rgba(255, 255, 255, 0.95); 
-        color: #374151; transition: all 0.2s;
+        color: #333; transition: all 0.2s;
         box-shadow: 0 2px 4px rgba(236, 72, 153, 0.1);
     }
     .input-field:focus { border-color: #ec4899; outline: none; transform: scale(1.01); }
     .input-readonly { background: #fdf2f8; color: #be185d; pointer-events: none; font-weight: bold; }
 
     /* Glass Card */
-    .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: 2px solid rgba(255, 255, 255, 0.8); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); border-radius: 24px; }
+    .glass-card { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: 2px solid rgba(255, 255, 255, 0.8); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); border-radius: 20px; }
     
     /* Checkbox Card */
-    .addon-card { position: relative; border: 2px solid #fbcfe8; background: white; border-radius: 14px; padding: 0; text-align: center; transition: all 0.2s; cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #6b7280; }
+    .addon-card { position: relative; border: 2px solid #fbcfe8; background: white; border-radius: 12px; padding: 0; text-align: center; transition: all 0.2s; cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; color: #555; }
     .addon-checkbox:checked + .addon-card { background-color: #fce7f3; border-color: #ec4899; color: #be185d; box-shadow: 0 2px 5px rgba(236, 72, 153, 0.2); transform: translateY(-2px); }
 
     /* Toggle Switch */
@@ -62,7 +67,7 @@
     .color-btn.selected { border-color: #ec4899; transform: scale(1.2); ring: 2px solid #ec4899; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     
-    /* 🔍 ปรับตารางใหญ่ + ไม่หด */
+    /* 🔍 ตาราง (ฟอนต์ปกติ) */
     .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; }
     .custom-table th { 
         background: rgba(255,241,242, 0.98); color: #be185d; font-weight: 800;
@@ -71,11 +76,11 @@
     }
     .custom-table td { 
         padding: 16px 10px; border-bottom: 1px solid #fff0f5; 
-        font-size: 18px; /* ตัวหนังสือในตารางใหญ่ขึ้นอีก */
+        font-size: 18px; /* ตัวหนังสือใหญ่ */
         vertical-align: middle; 
     }
     
-    .col-date { min-width: 90px; }
+    .col-date { min-width: 100px; }
     .col-queue { min-width: 65px; }
     .col-name { min-width: 160px; }
     .col-count { min-width: 70px; }
@@ -84,20 +89,22 @@
     .col-action { min-width: 70px; }
   </style>
  </head>
- <body class="h-full text-gray-700 relative">
+ <body class="h-full text-gray-800 relative">
   <div id="falling-container"></div>
 
   <div id="app" class="h-full w-full p-3 pb-0 max-w-md mx-auto relative flex flex-col z-10">
    <header class="text-center mb-2 shrink-0 pt-1">
-     <h1 class="text-3xl font-bold text-pink-600 tracking-wider cute-wiggle" style="text-shadow: 2px 2px 0px #fff; font-family: 'Mali', cursive;">🌸 AAFLOWERSHOP</h1>
+     <h1 class="text-3xl font-bold text-pink-600 tracking-wider cute-wiggle font-cute" style="text-shadow: 2px 2px 0px #fff;">🌸 AAFLOWERSHOP</h1>
    </header>
 
    <div class="glass-card p-3 mb-2 shrink-0">
     <div class="flex gap-2 mb-2">
-        <div class="flex-[1.8]"> <label class="input-group-label">ชื่อลูกค้า *</label> 
+        <div class="flex-[1.8]"> 
+            <label class="input-group-label">ชื่อลูกค้า *</label> 
             <input type="text" id="customer-name" class="input-field" placeholder="ระบุชื่อ...">
         </div>
-        <div class="flex-[1.2]"> <label class="input-group-label">วันที่รับ *</label> 
+        <div class="flex-[1.2]"> 
+            <label class="input-group-label">วันที่รับ *</label> 
             <input type="date" id="order-date" class="input-field px-1 block w-full text-sm">
         </div>
     </div>
@@ -259,7 +266,7 @@
         const newItem = {
             id: 'id_' + Date.now(),
             customer_name: name,
-            queue_number: '...', // เดี๋ยว Backend คำนวณเอง
+            queue_number: '...',
             flower_count: document.getElementById('flower-count').value || '1',
             order_date: dateVal,
             price: price || '0',
@@ -300,9 +307,15 @@
         tbody.innerHTML = '';
         let total = 0;
         
-        // เรียงตามวันที่ -> แล้วค่อยเรียงตามเลขคิว
+        // 🗓️ เรียงลำดับ: วันที่น้อยสุด (มาถึงก่อน) ไว้บนสุด -> แล้วตามด้วยคิว
         orders.sort((a, b) => {
-            if (a.order_date !== b.order_date) return new Date(a.order_date) - new Date(b.order_date);
+            const dateA = new Date(a.order_date);
+            const dateB = new Date(b.order_date);
+            
+            // ถ้าวันที่ต่างกัน ให้เอาวันที่น้อยกว่าขึ้นก่อน
+            if (dateA - dateB !== 0) return dateA - dateB;
+            
+            // ถ้าวันที่เท่ากัน ให้เรียงตามคิว
             return (parseInt(a.queue_number)||999) - (parseInt(b.queue_number)||999);
         });
 
@@ -322,7 +335,6 @@
                 else dateDisplay = order.order_date;
             }
 
-            // ✅ แสดงเครื่องหมายถูกหน้าคิว
             const queueDisplay = isFinished 
                 ? `<span class="text-green-500 mr-1 text-xl">✅</span>${order.queue_number}` 
                 : order.queue_number;
@@ -331,7 +343,7 @@
                 <td class="text-center font-bold text-gray-500 text-lg">${dateDisplay}</td>
                 <td class="text-center ${queueStyle}">${queueDisplay}</td>
                 <td class="pl-4">
-                    <div class="font-bold text-gray-700 text-xl truncate max-w-[200px]">${order.customer_name}</div>
+                    <div class="font-bold text-gray-800 text-xl truncate max-w-[200px]">${order.customer_name}</div>
                     ${order.notes ? `<div class="text-base text-pink-500 font-medium truncate max-w-[200px]">${order.notes}</div>` : ''}
                 </td>
                 <td class="text-center"><span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-xl text-lg font-bold shadow-sm">${order.flower_count}</span></td>
