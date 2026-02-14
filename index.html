@@ -190,8 +190,8 @@
   </div>
 
   <script>
-    // ✅✅✅ ใส่ลิ้งค์ของพี่ให้เรียบร้อยแล้วครับ ✅✅✅
-    const API_URL = "https://script.google.com/macros/s/AKfycbykNWYj-Bdit4PnqxRdOGHULxrxxNmO9G1p6lDz4wkSgQH3xiXPhqKA5zJxgLWHuN8zdQ/exec";
+    // ✅✅✅ อัปเดตลิ้งค์ใหม่ให้เรียบร้อยแล้วครับ! ✅✅✅
+    const API_URL = "https://script.google.com/macros/s/AKfycby8blm-QCpa0iknytBevuUS_MlLvrYcAKZtKryPpqKJqr7EjiY9txWusQA3G7Ri8yPFZA/exec";
     
     const COLOR_MAP = { '#ef4444':'แดง', '#f97316':'ส้ม', '#eab308':'เหลือง', '#84cc16':'เขียวอ่อน', '#22c55e':'เขียว', '#06b6d4':'ฟ้า', '#3b82f6':'น้ำเงิน', '#a855f7':'ม่วง', '#ec4899':'ชมพู', '#ffffff':'ขาว', '#000000':'ดำ' };
     const flowerColors = Object.keys(COLOR_MAP);
@@ -251,8 +251,7 @@
         } catch (err) {
             loader.classList.add('hidden');
             empty.classList.remove('hidden');
-            console.error(err);
-            // alert("❌ โหลดข้อมูลไม่ได้!\nเช็คลิ้งค์ Google Script ว่าถูกต้องไหม หรือเน็ตมีปัญหาครับ");
+            console.error("Fetch Error:", err);
         }
     }
 
