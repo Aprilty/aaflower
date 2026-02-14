@@ -165,7 +165,7 @@
      <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center p-6 text-pink-300 hidden">
         <div class="text-6xl mb-2 animate-bounce">🌷</div>
         <p class="font-bold text-lg text-pink-400">ยังไม่มีข้อมูล</p>
-        <p class="text-sm text-pink-300 mt-2">(หรือลืมใส่ลิ้งค์ Script?)</p>
+        <p class="text-sm text-pink-300 mt-2">กำลังเชื่อมต่อ...</p>
      </div>
 
      <div id="table-wrapper" class="overflow-auto flex-1 hidden">
@@ -190,12 +190,9 @@
   </div>
 
   <script>
-    // ⚠️⚠️⚠️ ⚠️⚠️⚠️ ⚠️⚠️⚠️
-    // เอาลิ้งค์ Google Script ของพี่ มาวางในเครื่องหมายคำพูดข้างล่างนี้ครับ
-    // ถ้าไม่วาง หรือวางผิด มันจะโหลดไม่ขึ้นครับ
-    const API_URL = "https://script.google.com/macros/s/AKfycbykNWYj-Bdit4PnqxRdOGHULxrxxNmO9G1p6lDz4wkSgQH3xiXPhqKA5zJxgLWHuN8zdQ/exec"; 
-    // ⚠️⚠️⚠️ ⚠️⚠️⚠️ ⚠️⚠️⚠️
-
+    // ✅✅✅ ใส่ลิ้งค์ของพี่ให้เรียบร้อยแล้วครับ ✅✅✅
+    const API_URL = "https://script.google.com/macros/s/AKfycbykNWYj-Bdit4PnqxRdOGHULxrxxNmO9G1p6lDz4wkSgQH3xiXPhqKA5zJxgLWHuN8zdQ/exec";
+    
     const COLOR_MAP = { '#ef4444':'แดง', '#f97316':'ส้ม', '#eab308':'เหลือง', '#84cc16':'เขียวอ่อน', '#22c55e':'เขียว', '#06b6d4':'ฟ้า', '#3b82f6':'น้ำเงิน', '#a855f7':'ม่วง', '#ec4899':'ชมพู', '#ffffff':'ขาว', '#000000':'ดำ' };
     const flowerColors = Object.keys(COLOR_MAP);
     const bouquetColors = ['#ec4899', '#ef4444', '#ffffff', '#000000', '#3b82f6', '#eab308', '#a855f7'];
@@ -205,9 +202,6 @@
     let orders = [];
 
     window.onload = function() {
-        if(API_URL.includes("วางลิ้งค์")) {
-            alert("⚠️ พี่ลืมวางลิ้งค์ Google Script ในโค้ดครับ! \n\nไปที่บรรทัด 208 แล้วเอาลิ้งค์มาใส่ก่อนนะ");
-        }
         createFallingFlowers();
         renderColorPickers();
         document.getElementById('order-date').valueAsDate = new Date();
@@ -258,7 +252,7 @@
             loader.classList.add('hidden');
             empty.classList.remove('hidden');
             console.error(err);
-            alert("❌ โหลดข้อมูลไม่ได้!\nเช็คลิ้งค์ Google Script ว่าถูกต้องไหม หรือเน็ตมีปัญหาครับ");
+            // alert("❌ โหลดข้อมูลไม่ได้!\nเช็คลิ้งค์ Google Script ว่าถูกต้องไหม หรือเน็ตมีปัญหาครับ");
         }
     }
 
