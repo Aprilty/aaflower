@@ -16,6 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Mali:wght@700&display=swap" rel="stylesheet">
   
   <style>
+    /* ตั้งค่าพื้นฐาน */
     body { 
         box-sizing: border-box; touch-action: manipulation; -webkit-tap-highlight-color: transparent; 
         overflow: hidden; 
@@ -23,16 +24,17 @@
     }
     .font-cute { font-family: 'Mali', cursive; }
     
+    /* Background & Animation */
     #falling-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; background: linear-gradient(180deg, #fff0f5 0%, #ffe4e6 100%); }
     .falling-item { position: absolute; top: -10%; animation: fall linear infinite; opacity: 0.6; z-index: 0; }
     @keyframes fall { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 0.8; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
     .cute-wiggle { display: inline-block; animation: wiggle 2s ease-in-out infinite; }
     @keyframes wiggle { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
 
-    /* ปรับ Input ให้เล็กลงนิดนึงเพื่อประหยัดที่ */
+    /* ฟอร์มแบบย่อ (Compact Form) */
     .input-group-label { font-size: 13px; font-weight: 700; color: #db2777; margin-bottom: 2px; display: block; margin-left: 4px; }
     .input-field { 
-        width: 100%; height: 40px; /* ลดความสูงลง */
+        width: 100%; height: 38px; /* ลดความสูง */
         padding: 0 10px; 
         border: 2px solid #fbcfe8; border-radius: 10px; 
         font-size: 16px; 
@@ -45,7 +47,7 @@
 
     .glass-card { background: rgba(255, 255, 255, 0.90); backdrop-filter: blur(8px); border: 2px solid rgba(255, 255, 255, 0.8); box-shadow: 0 4px 20px rgba(236, 72, 153, 0.15); border-radius: 16px; }
     
-    .addon-card { position: relative; border: 2px solid #fbcfe8; background: white; border-radius: 10px; padding: 0; text-align: center; transition: all 0.2s; cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #555; }
+    .addon-card { position: relative; border: 2px solid #fbcfe8; background: white; border-radius: 10px; padding: 0; text-align: center; transition: all 0.2s; cursor: pointer; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #555; }
     .addon-checkbox:checked + .addon-card { background-color: #fce7f3; border-color: #ec4899; color: #be185d; box-shadow: 0 2px 5px rgba(236, 72, 153, 0.2); transform: translateY(-1px); }
 
     /* Toggle Switch */
@@ -57,11 +59,11 @@
     .tgl-inp:checked + .tgl-bg .tgl-ball { left: 22px; }
     .finish-toggle .tgl-inp:checked + .tgl-bg { background: #3b82f6; border-color: #3b82f6; } 
 
-    .color-btn { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.15); transition: transform 0.2s; flex-shrink: 0; }
+    .color-btn { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 1px 3px rgba(0,0,0,0.15); transition: transform 0.2s; flex-shrink: 0; }
     .color-btn.selected { border-color: #ec4899; transform: scale(1.2); ring: 2px solid #ec4899; }
     .hide-scrollbar::-webkit-scrollbar { display: none; }
     
-    /* 🔍 ปรับตารางให้ใหญ่อ่านง่าย */
+    /* 🔍 ตารางใหญ่สะใจ */
     .custom-table { width: 100%; border-collapse: separate; border-spacing: 0; }
     .custom-table th { 
         background: rgba(255,241,242, 0.98); color: #be185d; font-weight: 800;
@@ -114,7 +116,7 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-2 mb-1 h-10">
+    <div class="grid grid-cols-2 gap-2 mb-1 h-9">
         <label class="block h-full w-full">
             <input type="checkbox" id="addon-crown" class="addon-checkbox hidden" onchange="calculatePrice()">
             <div class="addon-card">👑 มงกุฎ (+15)</div>
@@ -162,7 +164,8 @@
 
      <div id="empty-state" class="flex-1 flex flex-col items-center justify-center text-center p-6 text-pink-300 hidden">
         <div class="text-6xl mb-2 animate-bounce">🌷</div>
-        <p class="font-bold text-lg text-pink-400">ว่างเปล่า...</p>
+        <p class="font-bold text-lg text-pink-400">ยังไม่มีข้อมูล</p>
+        <p class="text-sm text-pink-300 mt-2">(หรือลืมใส่ลิ้งค์ Script?)</p>
      </div>
 
      <div id="table-wrapper" class="overflow-auto flex-1 hidden">
@@ -187,9 +190,12 @@
   </div>
 
   <script>
-    // ⚠️⚠️⚠️ เปลี่ยน Link Google Script ของพี่ตรงนี้ครับ ⚠️⚠️⚠️
-    const API_URL = "https://script.google.com/macros/s/AKfycbykNWYj-Bdit4PnqxRdOGHULxrxxNmO9G1p6lDz4wkSgQH3xiXPhqKA5zJxgLWHuN8zdQ/exec";
-    
+    // ⚠️⚠️⚠️ ⚠️⚠️⚠️ ⚠️⚠️⚠️
+    // เอาลิ้งค์ Google Script ของพี่ มาวางในเครื่องหมายคำพูดข้างล่างนี้ครับ
+    // ถ้าไม่วาง หรือวางผิด มันจะโหลดไม่ขึ้นครับ
+    const API_URL = "วางลิ้งค์_GOOGLE_SCRIPT_ของพี่ตรงนี้"; 
+    // ⚠️⚠️⚠️ ⚠️⚠️⚠️ ⚠️⚠️⚠️
+
     const COLOR_MAP = { '#ef4444':'แดง', '#f97316':'ส้ม', '#eab308':'เหลือง', '#84cc16':'เขียวอ่อน', '#22c55e':'เขียว', '#06b6d4':'ฟ้า', '#3b82f6':'น้ำเงิน', '#a855f7':'ม่วง', '#ec4899':'ชมพู', '#ffffff':'ขาว', '#000000':'ดำ' };
     const flowerColors = Object.keys(COLOR_MAP);
     const bouquetColors = ['#ec4899', '#ef4444', '#ffffff', '#000000', '#3b82f6', '#eab308', '#a855f7'];
@@ -199,6 +205,9 @@
     let orders = [];
 
     window.onload = function() {
+        if(API_URL.includes("วางลิ้งค์")) {
+            alert("⚠️ พี่ลืมวางลิ้งค์ Google Script ในโค้ดครับ! \n\nไปที่บรรทัด 208 แล้วเอาลิ้งค์มาใส่ก่อนนะ");
+        }
         createFallingFlowers();
         renderColorPickers();
         document.getElementById('order-date').valueAsDate = new Date();
@@ -226,17 +235,30 @@
         const loader = document.getElementById('loading-overlay');
         const empty = document.getElementById('empty-state');
         const table = document.getElementById('table-wrapper');
+        
         loader.classList.remove('hidden');
+        empty.classList.add('hidden'); // ซ่อน empty ไปก่อนตอนโหลด
+
         try {
             const res = await fetch(API_URL + "?action=read");
             const data = await res.json();
-            orders = data; renderTable();
+            
+            orders = data; 
+            renderTable();
+            
             loader.classList.add('hidden');
-            empty.classList.add('hidden');
-            table.classList.remove('hidden');
+            if (orders.length === 0) {
+                empty.classList.remove('hidden');
+                table.classList.add('hidden');
+            } else {
+                empty.classList.add('hidden');
+                table.classList.remove('hidden');
+            }
         } catch (err) {
             loader.classList.add('hidden');
             empty.classList.remove('hidden');
+            console.error(err);
+            alert("❌ โหลดข้อมูลไม่ได้!\nเช็คลิ้งค์ Google Script ว่าถูกต้องไหม หรือเน็ตมีปัญหาครับ");
         }
     }
 
@@ -269,13 +291,20 @@
             finish_or_not: 'not finish'
         };
 
-        orders.push(newItem); renderTable(); resetForm();
+        // แสดงผลทันทีไม่ต้องรอเซิร์ฟเวอร์
+        orders.push(newItem); 
+        renderTable(); 
+        resetForm();
         
+        // ส่งข้อมูลเข้า Sheet
         fetch(API_URL + "?action=create", {
             method: 'POST', mode: 'no-cors', headers: { "Content-Type": "text/plain" }, body: JSON.stringify(newItem)
         }).then(() => {
             btn.innerHTML = '✅';
-            setTimeout(() => { btn.innerHTML = '✨ บันทึก ✨'; btn.disabled = false; fetchData(); }, 1000);
+            setTimeout(() => { btn.innerHTML = '✨ บันทึก ✨'; btn.disabled = false; fetchData(); }, 1500);
+        }).catch(() => {
+            alert("บันทึกลง Sheet ไม่สำเร็จ แต่ในจอนี้ขึ้นแล้วนะ");
+            btn.innerHTML = '✨ บันทึก ✨'; btn.disabled = false;
         });
     }
 
@@ -296,17 +325,27 @@
 
     function renderTable() {
         const tbody = document.getElementById('orders-list-body');
-        tbody.innerHTML = '';
-        let total = 0;
+        const tableWrapper = document.getElementById('table-wrapper');
+        const emptyState = document.getElementById('empty-state');
         
-        // 1. เรียงข้อมูลตามวันที่
+        tbody.innerHTML = '';
+        
+        if (orders.length === 0) {
+            tableWrapper.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            return;
+        } else {
+            tableWrapper.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+        }
+
+        let total = 0;
         orders.sort((a, b) => {
             const dateA = new Date(a.order_date);
             const dateB = new Date(b.order_date);
             return dateA - dateB; 
         });
 
-        // 2. วนลูปสร้างตาราง พร้อมคำนวณเลขคิวใหม่ (index + 1)
         orders.forEach((order, index) => {
             if (!order.is_paid) total += parseFloat(order.price) || 0;
             const tr = document.createElement('tr');
@@ -317,7 +356,6 @@
             const queueStyle = isPriority ? 'text-red-500 font-extrabold text-2xl' : 'text-pink-600 font-bold text-2xl';
 
             const dynamicQueueNumber = index + 1;
-
             let dateDisplay = "-";
             if(order.order_date) {
                 const d = new Date(order.order_date);
