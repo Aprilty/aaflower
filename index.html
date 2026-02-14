@@ -51,7 +51,7 @@
 
     .input-field { 
         width: 100%; 
-        height: 42px; /* ความสูงมาตรฐาน */
+        height: 42px; 
         padding: 0 12px; 
         border: 2px solid #fbcfe8; 
         border-radius: 12px; 
@@ -60,6 +60,7 @@
         color: #333; 
         transition: all 0.2s;
         box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        -webkit-appearance: none; /* แก้บั๊ก iOS */
     }
     .input-field:focus { border-color: #ec4899; outline: none; box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2); }
     .input-readonly { background: #fdf2f8; color: #be185d; pointer-events: none; font-weight: bold; border-color: #fce7f3; }
@@ -67,7 +68,7 @@
     /* Addon Cards (Checkbox) */
     .addon-card { 
         position: relative; 
-        height: 42px; /* สูงเท่า Input */
+        height: 42px; 
         border: 2px solid #fbcfe8; 
         background: white; 
         border-radius: 12px; 
@@ -79,6 +80,7 @@
         color: #666; 
         transition: all 0.2s; 
         cursor: pointer; 
+        padding: 0 8px; /* เพิ่ม Padding ให้ตัวหนังสือไม่ชิดขอบ */
     }
     .addon-checkbox:checked + .addon-card { 
         background-color: #fce7f3; 
@@ -88,7 +90,7 @@
         box-shadow: 0 2px 5px rgba(236, 72, 153, 0.2); 
     }
 
-    /* Toggle Switch */
+    /* Toggle Switch & Colors */
     .tgl-wrap { position: relative; display: inline-block; width: 44px; height: 24px; }
     .tgl-inp { display: none; }
     .tgl-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #e5e7eb; border-radius: 20px; transition: 0.3s; border: 1px solid #d1d5db; }
@@ -124,37 +126,34 @@
 
    <div class="glass-card p-3 mb-3 shrink-0">
     
-    <div class="flex gap-3 mb-2">
-        <div class="flex-[1.5]"> 
-            <label class="input-label">ชื่อลูกค้า</label> 
-            <input type="text" id="customer-name" class="input-field" placeholder="ระบุชื่อ...">
-        </div>
-        <div class="flex-1"> 
-            <label class="input-label">วันที่รับ</label> 
-            <input type="date" id="order-date" class="input-field px-2 text-sm text-center">
-        </div>
+    <div class="mb-2">
+        <label class="input-label">ชื่อลูกค้า</label> 
+        <input type="text" id="customer-name" class="input-field" placeholder="ระบุชื่อ...">
     </div>
 
     <div class="flex gap-3 mb-2">
+        <div class="flex-[1.5]"> <label class="input-label">วันที่รับ</label> 
+            <input type="date" id="order-date" class="input-field px-2 text-sm text-center">
+        </div>
         <div class="flex-1">
             <label class="input-label text-center">จำนวน</label> 
             <input type="number" id="flower-count" class="input-field text-center text-lg font-bold" placeholder="1" value="1" inputmode="numeric" oninput="calculatePrice()">
         </div>
-        <div class="flex-1">
-            <label class="input-label text-center">ราคา</label> 
-            <input type="number" id="price" class="input-field text-center text-lg font-bold input-readonly" placeholder="0" readonly>
-        </div>
     </div>
 
-    <div class="flex gap-3 mb-2">
-        <label class="flex-1 block">
-            <input type="checkbox" id="addon-crown" class="addon-checkbox hidden" onchange="calculatePrice()">
-            <div class="addon-card">👑 มงกุฎ (+15)</div>
-        </label>
-        <label class="flex-1 block">
-            <input type="checkbox" id="addon-butterfly" class="addon-checkbox hidden" onchange="calculatePrice()">
-            <div class="addon-card">🦋 ผีเสื้อ (+10)</div>
-        </label>
+    <div class="flex gap-2 mb-2">
+        <div class="w-24 shrink-0"> <label class="input-label text-center">ราคา</label> 
+            <input type="number" id="price" class="input-field text-center text-lg font-bold input-readonly" placeholder="0" readonly>
+        </div>
+        <div class="flex-1 flex gap-2"> <label class="flex-1 block">
+                <input type="checkbox" id="addon-crown" class="addon-checkbox hidden" onchange="calculatePrice()">
+                <div class="addon-card">👑 มงกุฎ</div>
+            </label>
+            <label class="flex-1 block">
+                <input type="checkbox" id="addon-butterfly" class="addon-checkbox hidden" onchange="calculatePrice()">
+                <div class="addon-card">🦋 ผีเสื้อ</div>
+            </label>
+        </div>
     </div>
 
     <div class="mb-2">
@@ -220,6 +219,7 @@
   </div>
 
   <script>
+    // 🔥 ใส่ลิ้งค์ Google Script อันใหม่ของพี่ที่นี่เลยครับ (ที่ลงท้ายด้วย /exec)
     const API_URL = "https://script.google.com/macros/s/AKfycby8blm-QCpa0iknytBevuUS_MlLvrYcAKZtKryPpqKJqr7EjiY9txWusQA3G7Ri8yPFZA/exec";
     
     const COLOR_MAP = { '#ef4444':'แดง', '#f97316':'ส้ม', '#eab308':'เหลือง', '#84cc16':'เขียวอ่อน', '#22c55e':'เขียว', '#06b6d4':'ฟ้า', '#3b82f6':'น้ำเงิน', '#a855f7':'ม่วง', '#ec4899':'ชมพู', '#ffffff':'ขาว', '#000000':'ดำ' };
@@ -331,7 +331,6 @@
     }
 
     function renderTable() {
-        // 🔥🔥🔥 แก้บั๊กผีหลอก (Ghost Row) ตรงนี้ครับ 🔥🔥🔥
         orders = orders.filter(o => o.customer_name && o.customer_name.trim() !== ""); 
 
         const tbody = document.getElementById('orders-list-body');
